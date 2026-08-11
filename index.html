@@ -81,7 +81,7 @@
       display: flex; align-items: center; gap: 10px; font-weight: 700;
       font-size: 18px; letter-spacing: 2px; text-transform: uppercase;
     }
-    .zs-nav-brand img { height: 36px; width: auto; filter: drop-shadow(0 0 8px rgba(0, 212, 255, 0.4)); }
+    .zs-nav-brand svg { height: 36px; width: auto; filter: drop-shadow(0 0 8px rgba(0, 212, 255, 0.6)); }
     .zs-nav-links { display: flex; gap: 32px; }
     .zs-nav-links a {
       font-size: 14px; font-weight: 500; color: var(--zs-text-2);
@@ -128,7 +128,7 @@
       pointer-events: none; z-index: -1;
     }
     .zs-hero-logo { margin-bottom: 32px; }
-    .zs-hero-logo img { max-width: 280px; width: 100%; height: auto; filter: drop-shadow(0 0 30px rgba(0, 212, 255, 0.3)); }
+    .zs-hero-logo svg { max-width: 240px; width: 100%; height: auto; filter: drop-shadow(0 0 30px rgba(0, 212, 255, 0.5)); }
     .zs-hero-title {
       font-size: 48px; font-weight: 700; margin-bottom: 16px;
       text-transform: uppercase; letter-spacing: 4px;
@@ -308,7 +308,7 @@
       .zs-nav-toggle { display: block; }
       .zs-hero-title { font-size: 32px; }
       .zs-hero-subtitle { font-size: 16px; }
-      .zs-hero-logo img { max-width: 200px; }
+      .zs-hero-logo svg { max-width: 180px; }
       .zs-section { padding: 40px 20px; }
       .zs-section-title { font-size: 24px; }
       .zs-grid-2, .zs-grid-3, .zs-grid-4 { grid-template-columns: 1fr; }
@@ -333,7 +333,19 @@
   <nav class="zs-nav">
     <div class="zs-nav-inner">
       <a href="#home" class="zs-nav-brand">
-        <img src="logo.jpg" alt="Zephyr Store Logo">
+        <!-- VECTOR LOGO (Nav) -->
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M50 10 L85 45 L50 90 L15 45 Z" fill="url(#cyanGrad)" stroke="#00d4ff" stroke-width="2"/>
+          <path d="M50 10 L50 90 M15 45 L85 45 M32 27.5 L68 62.5 M68 27.5 L32 62.5" stroke="#ffffff" stroke-opacity="0.4" stroke-width="1.5"/>
+          <path d="M10 50 Q 30 20, 50 20 Q 35 40, 10 50 Z" fill="#00d4ff" opacity="0.8"/>
+          <path d="M90 50 Q 70 20, 50 20 Q 65 40, 90 50 Z" fill="#0088ff" opacity="0.8"/>
+          <defs>
+            <linearGradient id="cyanGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#00d4ff"/>
+              <stop offset="100%" stop-color="#0088ff"/>
+            </linearGradient>
+          </defs>
+        </svg>
         <span>Zephyr</span>
       </a>
       <button class="zs-nav-toggle" id="zsNavToggle" aria-label="Toggle menu">☰</button>
@@ -348,7 +360,23 @@
   <!-- HERO -->
   <section class="zs-hero" id="home">
     <div class="zs-hero-logo">
-      <img src="logo.jpg" alt="Zephyr Store Logo">
+      <!-- VECTOR LOGO (Hero) -->
+      <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M100 20 L170 90 L100 180 L30 90 Z" fill="url(#heroGrad)" stroke="#00d4ff" stroke-width="3"/>
+        <path d="M100 20 L100 180 M30 90 L170 90 M65 55 L135 125 M135 55 L65 125" stroke="#ffffff" stroke-opacity="0.5" stroke-width="2"/>
+        <!-- Left Wing -->
+        <path d="M20 100 Q 60 40, 100 40 Q 70 80, 20 100 Z" fill="#00d4ff" opacity="0.85"/>
+        <path d="M10 120 Q 50 70, 90 60 Q 60 100, 10 120 Z" fill="#0088ff" opacity="0.7"/>
+        <!-- Right Wing -->
+        <path d="M180 100 Q 140 40, 100 40 Q 130 80, 180 100 Z" fill="#00d4ff" opacity="0.85"/>
+        <path d="M190 120 Q 150 70, 110 60 Q 140 100, 190 120 Z" fill="#0088ff" opacity="0.7"/>
+        <defs>
+          <linearGradient id="heroGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#00d4ff"/>
+            <stop offset="100%" stop-color="#0055ff"/>
+          </linearGradient>
+        </defs>
+      </svg>
     </div>
     <h1 class="zs-hero-title">Welcome to Zephyr Store</h1>
     <p class="zs-hero-subtitle">Sri Lanka's Trusted Gaming Store</p>
