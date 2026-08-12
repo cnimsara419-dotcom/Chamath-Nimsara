@@ -17,6 +17,7 @@
       --zs-bg-2: #060610;
       --zs-cyan: #00d4ff;
       --zs-blue: #0088ff;
+      --zs-pink: #ff0055;
       --zs-cyan-glow: rgba(0, 212, 255, 0.4);
       --zs-text: #ffffff;
       --zs-text-2: #8899aa;
@@ -75,15 +76,16 @@
 
     /* ===== LIVE TICKER ===== */
     .zs-ticker {
-      background: linear-gradient(90deg, rgba(0, 212, 255, 0.1), rgba(0, 136, 255, 0.15));
-      border-bottom: 1px solid var(--zs-border);
+      background: linear-gradient(90deg, rgba(255, 0, 85, 0.15), rgba(0, 212, 255, 0.15));
+      border-bottom: 1px solid rgba(255, 0, 85, 0.3);
       overflow: hidden;
       white-space: nowrap;
       position: relative;
       z-index: 51;
       font-size: 13px;
       padding: 8px 0;
-      color: var(--zs-cyan);
+      color: #ff3377;
+      font-weight: 600;
     }
     .zs-ticker-content {
       display: inline-block;
@@ -175,46 +177,62 @@
       border-radius: 2px; box-shadow: 0 0 12px var(--zs-cyan-glow);
     }
 
-    /* ===== HERO ===== */
+    /* ===== MAINTENANCE HERO & COUNTDOWN ===== */
     .zs-hero {
       text-align: center;
       display: flex; flex-direction: column; align-items: center; justify-content: center;
-      padding: 40px 0;
+      padding: 30px 0;
     }
-    .zs-hero-logo { margin-bottom: 20px; }
-    .zs-hero-logo svg { max-width: 180px; width: 100%; height: auto; filter: drop-shadow(0 0 30px rgba(0, 212, 255, 0.5)); }
+    .zs-maintenance-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 8px 18px; border-radius: 30px;
+      background: rgba(255, 0, 85, 0.15); border: 1px solid rgba(255, 0, 85, 0.4);
+      color: #ff3377; font-weight: 700; font-size: 12px; letter-spacing: 2px;
+      text-transform: uppercase; margin-bottom: 20px;
+      box-shadow: 0 0 20px rgba(255, 0, 85, 0.2);
+    }
     .zs-hero-title {
-      font-size: 42px; font-weight: 800; margin-bottom: 12px;
-      text-transform: uppercase; letter-spacing: 4px;
-      background: linear-gradient(135deg, #ffffff 20%, #ff0055 60%, #ff5500 100%);
+      font-size: 40px; font-weight: 800; margin-bottom: 12px;
+      text-transform: uppercase; letter-spacing: 3px;
+      background: linear-gradient(135deg, #ffffff 0%, var(--zs-cyan) 50%, #0088ff 100%);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      filter: drop-shadow(0 0 20px rgba(255, 0, 85, 0.4));
+      filter: drop-shadow(0 0 25px rgba(0, 212, 255, 0.3));
     }
-    .zs-hero-subtitle { font-size: 18px; color: var(--zs-text-2); margin-bottom: 24px; letter-spacing: 2px; }
-    
-    .zs-explore-btn {
-      margin-bottom: 20px;
-      padding: 16px 36px;
-      font-size: 16px;
-      font-weight: 700;
-      border-radius: 30px;
-      background: linear-gradient(135deg, var(--zs-cyan), var(--zs-blue));
-      color: #000;
-      box-shadow: 0 0 25px var(--zs-cyan-glow);
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      transition: all 0.3s ease;
-      cursor: pointer;
+    .zs-hero-subtitle { font-size: 17px; color: var(--zs-text-2); margin-bottom: 30px; letter-spacing: 1px; }
+
+    /* COUNTDOWN CARD */
+    .zs-countdown-card {
+      background: var(--zs-glass); backdrop-filter: blur(20px);
+      border: 1px solid var(--zs-cyan); border-radius: 24px;
+      padding: 30px 40px; margin-bottom: 30px; max-width: 650px; width: 100%;
+      box-shadow: 0 0 35px rgba(0, 212, 255, 0.25);
     }
-    .zs-explore-btn:hover {
-      transform: translateY(-4px) scale(1.03);
-      box-shadow: 0 0 40px var(--zs-cyan-glow);
+    .zs-countdown-title {
+      font-size: 13px; font-weight: 700; color: var(--zs-cyan);
+      text-transform: uppercase; letter-spacing: 3px; margin-bottom: 20px;
+    }
+    .zs-timer-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px;
+    }
+    .zs-timer-box {
+      background: rgba(0, 0, 0, 0.5); border: 1px solid var(--zs-border);
+      border-radius: 16px; padding: 15px 10px; text-align: center;
+      transition: border-color 0.3s ease;
+    }
+    .zs-timer-box:hover { border-color: var(--zs-cyan); }
+    .zs-timer-number {
+      font-size: 32px; font-weight: 800; color: #ffffff;
+      text-shadow: 0 0 15px var(--zs-cyan-glow); line-height: 1;
+    }
+    .zs-timer-label {
+      font-size: 11px; font-weight: 600; color: var(--zs-text-2);
+      text-transform: uppercase; letter-spacing: 1px; margin-top: 8px;
     }
 
     .zs-creator-tag {
       font-size: 13px; font-weight: 600; color: var(--zs-cyan);
       letter-spacing: 2px; text-transform: uppercase;
-      text-shadow: 0 0 10px var(--zs-cyan-glow);
+      text-shadow: 0 0 10px var(--zs-cyan-glow); margin-top: 15px;
     }
 
     /* ===== BUTTONS ===== */
@@ -389,7 +407,7 @@
     }
     .zs-float svg { width: 32px; height: 32px; fill: white; }
 
-    /* MOBILE */
+    /* MOBILE RESPONSIVENESS */
     @media (max-width: 768px) {
       .zs-nav-links {
         position: absolute; top: 64px; left: 0; right: 0; background: rgba(3, 3, 8, 0.98);
@@ -397,8 +415,10 @@
       }
       .zs-nav-links.open { display: flex; }
       .zs-nav-toggle { display: block; }
-      .zs-hero-title { font-size: 30px; }
+      .zs-hero-title { font-size: 28px; }
       .zs-grid-3, .zs-reviews-grid { grid-template-columns: 1fr; }
+      .zs-timer-grid { grid-template-columns: repeat(2, 1fr); }
+      .zs-countdown-card { padding: 20px; }
     }
   </style>
 </head>
@@ -416,8 +436,8 @@
   <!-- LIVE PROOF TICKER -->
   <div class="zs-ticker">
     <div class="zs-ticker-content">
-      <span class="zs-ticker-item"><span class="zs-ticker-dot"></span> ⚠️ Notice: Zephyr Store is currently CLOSED for maintenance. We will be back soon!</span>
-      <span class="zs-ticker-item"><span class="zs-ticker-dot"></span> ⚠️ Notice: Website is under system updates. Please check back later.</span>
+      <span class="zs-ticker-item"><span class="zs-ticker-dot"></span> 🛠️ Website Under Maintenance — We're improving your experience!</span>
+      <span class="zs-ticker-item"><span class="zs-ticker-dot"></span> ⏳ Store Reopening Soon — Check back after the countdown timer.</span>
     </div>
   </div>
 
@@ -468,25 +488,43 @@
   <!-- MAIN PAGE CONTAINERS -->
   <div class="zs-page-container">
 
-    <!-- PAGE 1: HOME -->
+    <!-- PAGE 1: HOME (MAINTENANCE HUB) -->
     <section class="zs-page active-page" id="page-home">
       <div class="zs-hero">
-        <div class="zs-hero-logo">
-          <svg viewBox="0 0 200 200" fill="none">
-            <path d="M100 20 L170 90 L100 180 L30 90 Z" fill="url(#heroGrad)" stroke="#00d4ff" stroke-width="3"/>
-            <defs>
-              <linearGradient id="heroGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#00d4ff"/>
-                <stop offset="100%" stop-color="#0055ff"/>
-              </linearGradient>
-            </defs>
-          </svg>
-        </div>
-        <h1 class="zs-hero-title">WEBSITE TEMPORARILY CLOSED</h1>
-        <p class="zs-hero-subtitle">We are currently undergoing system updates. We will be back online soon!</p>
         
-        <!-- CLOSED NOTICE BUTTON -->
-        <button class="zs-explore-btn" style="background: linear-gradient(135deg, #ff0055, #ff5500); color: #fff; box-shadow: 0 0 25px rgba(255,0,85,0.4);" onclick="alert('⚠️ Website is currently closed for maintenance!')">🔒 STORE CLOSED</button>
+        <div class="zs-maintenance-badge">
+          🛠️ Website Under Maintenance
+        </div>
+
+        <h1 class="zs-hero-title">WE'RE IMPROVING YOUR EXPERIENCE</h1>
+        <p class="zs-hero-subtitle">Our store is currently offline for scheduled system updates and upgrades.</p>
+        
+        <!-- COUNTDOWN TIMER CONTAINER -->
+        <div class="zs-countdown-card">
+          <div class="zs-countdown-title">⏱️ Store Reopening In:</div>
+          <div class="zs-timer-grid">
+            <div class="zs-timer-box">
+              <div class="zs-timer-number" id="cd-days">01</div>
+              <div class="zs-timer-label">Days</div>
+            </div>
+            <div class="zs-timer-box">
+              <div class="zs-timer-number" id="cd-hours">08</div>
+              <div class="zs-timer-label">Hours</div>
+            </div>
+            <div class="zs-timer-box">
+              <div class="zs-timer-number" id="cd-minutes">32</div>
+              <div class="zs-timer-label">Minutes</div>
+            </div>
+            <div class="zs-timer-box">
+              <div class="zs-timer-number" id="cd-seconds">00</div>
+              <div class="zs-timer-label">Seconds</div>
+            </div>
+          </div>
+        </div>
+
+        <button class="zs-btn zs-btn-primary" style="background: linear-gradient(135deg, #ff0055, #ff5500); color: #fff; box-shadow: 0 0 25px rgba(255,0,85,0.4);" onclick="alert('⚠️ Website is currently closed for maintenance!')">
+          🔒 ORDERS TEMPORARILY DISABLED
+        </button>
 
         <div class="zs-creator-tag">Created by Admin Chamath</div>
       </div>
@@ -792,52 +830,6 @@
     </div>
   </div>
 
-  <!-- PAYMENT CHOICE MODAL FOR SINGLE PURCHASES -->
-  <div class="zs-modal-overlay" id="paymentChoiceModal">
-    <div class="zs-modal">
-      <div class="zs-modal-close" onclick="closePaymentModal()">×</div>
-      <h3>Select Payment Method</h3>
-      <p id="purchaseItemTitle" style="color: var(--zs-cyan); font-weight: bold;"></p>
-      
-      <div class="zs-form-group">
-        <label>Free Fire UID / Details</label>
-        <input type="text" id="checkoutUidInput" class="zs-form-input" placeholder="Enter FF UID or Details">
-      </div>
-
-      <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
-        <button class="zs-btn zs-btn-primary" onclick="processWalletPay()">
-          💰 Pay via Wallet (Balance: <span id="payModalWalletBal">Rs. 0</span>)
-        </button>
-        <button class="zs-btn zs-btn-secondary" onclick="processWhatsAppPay()">
-          📱 Direct WhatsApp Order
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- CART PAYMENT MODAL -->
-  <div class="zs-modal-overlay" id="cartPaymentModal">
-    <div class="zs-modal">
-      <div class="zs-modal-close" onclick="closeCartPaymentModal()">×</div>
-      <h3>Cart Checkout</h3>
-      <p id="cartModalTotalTitle" style="color: var(--zs-cyan); font-weight: bold; font-size: 16px;"></p>
-      
-      <div class="zs-form-group">
-        <label>Free Fire UID / Order Details</label>
-        <input type="text" id="cartCheckoutUidInput" class="zs-form-input" placeholder="Enter FF UID or Note">
-      </div>
-
-      <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
-        <button class="zs-btn zs-btn-primary" onclick="processCartWalletPay()">
-          💰 Pay Cart via Wallet (Balance: <span id="cartModalWalletBal">Rs. 0</span>)
-        </button>
-        <button class="zs-btn zs-btn-secondary" onclick="processCartWhatsAppPay()">
-          📱 Order Cart via WhatsApp
-        </button>
-      </div>
-    </div>
-  </div>
-
   <!-- SHOPPING CART DRAWER -->
   <div class="zs-cart-drawer" id="cartDrawer">
     <div class="zs-cart-header">
@@ -883,15 +875,40 @@
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
 
-    var autoHomeTimer;
     var cart = [];
     var currentUser = JSON.parse(localStorage.getItem('zephyrUser')) || null;
     var currentWalletBalance = 0;
-    var selectedPurchase = null;
 
     var currentRegisteredSlots = parseInt(localStorage.getItem('tourneySlots')) || 0;
     var maxSlots = 16;
     var storePhone = "94742605032";
+
+    // REALTIME COUNTDOWN TIMER (01 Days 08 Hours 32 Minutes)
+    var targetDate = new Date().getTime() + (1 * 24 * 60 * 60 * 1000) + (8 * 60 * 60 * 1000) + (32 * 60 * 1000);
+
+    function updateCountdown() {
+      var now = new Date().getTime();
+      var distance = targetDate - now;
+
+      if (distance < 0) {
+        document.getElementById("cd-days").innerText = "00";
+        document.getElementById("cd-hours").innerText = "00";
+        document.getElementById("cd-minutes").innerText = "00";
+        document.getElementById("cd-seconds").innerText = "00";
+        return;
+      }
+
+      var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      document.getElementById("cd-days").innerText = days < 10 ? "0" + days : days;
+      document.getElementById("cd-hours").innerText = hours < 10 ? "0" + hours : hours;
+      document.getElementById("cd-minutes").innerText = minutes < 10 ? "0" + minutes : minutes;
+      document.getElementById("cd-seconds").innerText = seconds < 10 ? "0" + seconds : seconds;
+    }
+    setInterval(updateCountdown, 1000);
 
     // INITIALIZE USER & WALLET SYNC
     function initUserUI() {
@@ -914,8 +931,6 @@
           currentWalletBalance = snapshot.val() || 0;
           document.getElementById('navWalletBalance').innerText = 'Rs. ' + currentWalletBalance;
           document.getElementById('modalWalletBalance').innerText = 'Rs. ' + currentWalletBalance;
-          document.getElementById('payModalWalletBal').innerText = 'Rs. ' + currentWalletBalance;
-          document.getElementById('cartModalWalletBal').innerText = 'Rs. ' + currentWalletBalance;
         });
 
       } else {
@@ -1013,48 +1028,9 @@
       });
     }
 
-    // PURCHASES & WALLET DEDUCTION
+    // PURCHASES DISABLED DURING MAINTENANCE
     function initiatePurchase(itemName, itemPrice) {
       alert('⚠️ Website is currently closed for maintenance! Ordering is temporarily disabled.');
-    }
-
-    function closePaymentModal() {
-      document.getElementById('paymentChoiceModal').classList.remove('active');
-    }
-
-    function processWalletPay() {
-      var uid = document.getElementById('checkoutUidInput').value.trim();
-      if(!uid) return alert('කරුණාකර FF UID හෝ විස්තර ඇතුළත් කරන්න!');
-
-      if(currentWalletBalance < selectedPurchase.price) {
-        alert('❌ Wallet Balance එක මදියි! සල්ලි එකතු කිරීමට Wallet එකට යන්න.');
-        return;
-      }
-
-      var newBalance = currentWalletBalance - selectedPurchase.price;
-      
-      database.ref('users/' + currentUser.phone).update({ balance: newBalance });
-
-      var orderId = 'ORD_' + Date.now();
-      database.ref('orders/' + orderId).set({
-        user: currentUser.name,
-        phone: currentUser.phone,
-        uid: uid,
-        item: selectedPurchase.name,
-        price: selectedPurchase.price,
-        status: 'Pending',
-        timestamp: Date.now()
-      });
-
-      alert('✅ Order එක සාර්ථකයි! Admin පරීක්ෂා කර සේවාව සක්‍රීය කරනු ඇත.');
-      closePaymentModal();
-    }
-
-    function processWhatsAppPay() {
-      var uid = document.getElementById('checkoutUidInput').value.trim();
-      var msg = "Hi, I want to order " + selectedPurchase.name + " - Rs. " + selectedPurchase.price + "\nUID/Details: " + uid + "\nUser: " + currentUser.name + " (" + currentUser.phone + ")";
-      window.open("https://wa.me/" + storePhone + "?text=" + encodeURIComponent(msg), '_blank');
-      closePaymentModal();
     }
 
     // ADMIN FUNCTIONS FOR REALTIME USER & ORDERS FETCHING
@@ -1183,25 +1159,6 @@
     }
 
     // TOURNAMENT LOGIC
-    function updateSlotUI() {
-      var slotDisplay = document.getElementById('slotDisplay');
-      var submitBtn = document.getElementById('tourneySubmitBtn');
-      if (currentRegisteredSlots >= maxSlots) {
-        slotDisplay.innerText = '🔒 Registration Closed (16/16)';
-        slotDisplay.style.borderColor = '#ff0055';
-        slotDisplay.style.color = '#ff0055';
-        slotDisplay.style.background = 'rgba(ff, 0, 85, 0.15)';
-        if (submitBtn) {
-          submitBtn.disabled = true;
-          submitBtn.innerText = '🔒 Registration Closed';
-          submitBtn.style.opacity = '0.5';
-          submitBtn.style.cursor = 'not-allowed';
-        }
-      } else {
-        slotDisplay.innerText = '👥 Slots — ' + currentRegisteredSlots + '/' + maxSlots;
-      }
-    }
-
     function handleTournamentRegistration(e) {
       e.preventDefault();
       alert('⚠️ Tournaments are temporarily closed for maintenance.');
@@ -1216,38 +1173,8 @@
       alert('⚠️ Store is closed for maintenance! Cannot add items to cart.');
     }
 
-    function removeFromCart(index) {
-      cart.splice(index, 1);
-      updateCartUI();
-    }
-
-    function updateCartUI() {
-      document.getElementById('cartCount').innerText = cart.length;
-      var container = document.getElementById('cartItemsContainer');
-      var total = 0;
-      container.innerHTML = '';
-
-      if (cart.length === 0) {
-        container.innerHTML = '<p style="color: var(--zs-text-2); text-align: center; margin-top: 20px;">Your cart is empty.</p>';
-      } else {
-        cart.forEach(function(item, idx) {
-          total += item.price;
-          var div = document.createElement('div');
-          div.className = 'zs-cart-item';
-          div.innerHTML = '<div><div class="zs-cart-item-title">' + item.name + '</div><div class="zs-cart-item-price">Rs. ' + item.price + '</div></div>' +
-                          '<span class="zs-cart-item-remove" onclick="removeFromCart(' + idx + ')">×</span>';
-          container.appendChild(div);
-        });
-      }
-      document.getElementById('cartTotal').innerText = 'Rs. ' + total;
-    }
-
     function checkoutCart() {
       alert('⚠️ Store is currently closed for maintenance.');
-    }
-
-    function closeCartPaymentModal() {
-      document.getElementById('cartPaymentModal').classList.remove('active');
     }
 
     // MAINTENANCE MODE LOCKED NAVIGATION
@@ -1284,15 +1211,11 @@
       if(targetNav) targetNav.classList.add('active');
     }
 
-    function resetAutoHomeTimer(currentPage) {
-      clearTimeout(autoHomeTimer);
-    }
-
     // PAGE LOAD INITS
     (function() {
       window.addEventListener('load', function() {
         initUserUI();
-        updateSlotUI();
+        updateCountdown();
         setTimeout(function() { document.getElementById('zsLoader').classList.add('hidden'); }, 1000);
       });
 
