@@ -65,6 +65,37 @@
       pointer-events: none; z-index: 0;
     }
 
+    /* ===== LIVE TICKER ===== */
+    .zs-ticker {
+      background: linear-gradient(90deg, rgba(0, 212, 255, 0.1), rgba(0, 136, 255, 0.15));
+      border-bottom: 1px solid var(--zs-border);
+      overflow: hidden;
+      white-space: nowrap;
+      position: relative;
+      z-index: 51;
+      font-size: 13px;
+      padding: 8px 0;
+      color: var(--zs-cyan);
+    }
+    .zs-ticker-content {
+      display: inline-block;
+      animation: zs-scroll 25s linear infinite;
+    }
+    .zs-ticker-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-right: 40px;
+    }
+    .zs-ticker-dot {
+      width: 8px; height: 8px; background: #00ff88; border-radius: 50%;
+      box-shadow: 0 0 8px #00ff88;
+    }
+    @keyframes zs-scroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
     /* ===== NAVIGATION ===== */
     .zs-nav {
       position: sticky; top: 0; z-index: 50;
@@ -130,13 +161,25 @@
     .zs-hero-logo { margin-bottom: 32px; }
     .zs-hero-logo svg { max-width: 240px; width: 100%; height: auto; filter: drop-shadow(0 0 30px rgba(0, 212, 255, 0.5)); }
     .zs-hero-title {
-      font-size: 48px; font-weight: 700; margin-bottom: 16px;
-      text-transform: uppercase; letter-spacing: 4px;
-      text-shadow: 0 0 20px var(--zs-cyan-glow), 0 0 40px rgba(0, 136, 255, 0.2);
+      font-size: 52px; font-weight: 800; margin-bottom: 16px;
+      text-transform: uppercase; letter-spacing: 5px;
+      background: linear-gradient(135deg, #ffffff 20%, #00d4ff 60%, #0088ff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 0 20px var(--zs-cyan-glow));
     }
     .zs-hero-subtitle {
-      font-size: 20px; color: var(--zs-text-2); margin-bottom: 40px;
+      font-size: 20px; color: var(--zs-text-2); margin-bottom: 12px;
       letter-spacing: 2px;
+    }
+    .zs-creator-tag {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--zs-cyan);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 32px;
+      text-shadow: 0 0 10px var(--zs-cyan-glow);
     }
 
     /* ===== BUTTONS ===== */
@@ -154,16 +197,6 @@
     }
     .zs-btn-primary:hover {
       box-shadow: 0 0 30px var(--zs-cyan-glow), 0 0 60px rgba(0, 136, 255, 0.2);
-      transform: translateY(-3px);
-    }
-    .zs-btn-secondary {
-      background: transparent; color: var(--zs-cyan);
-      border: 2px solid var(--zs-cyan);
-      box-shadow: 0 0 10px rgba(0, 212, 255, 0.15);
-    }
-    .zs-btn-secondary:hover {
-      background: rgba(0, 212, 255, 0.08);
-      box-shadow: 0 0 25px var(--zs-cyan-glow);
       transform: translateY(-3px);
     }
 
@@ -195,60 +228,89 @@
     .zs-grid-3 { grid-template-columns: repeat(3, 1fr); }
     .zs-grid-4 { grid-template-columns: repeat(4, 1fr); }
 
-    /* ===== CARDS ===== */
+    /* ===== CARDS & BADGES ===== */
+    .zs-card-badge {
+      position: absolute; top: 16px; right: 16px;
+      background: linear-gradient(135deg, #ff0055, #ff5500);
+      color: #fff; font-size: 10px; font-weight: 800; padding: 4px 10px;
+      border-radius: 20px; letter-spacing: 1px; text-transform: uppercase;
+      box-shadow: 0 0 10px rgba(255, 0, 85, 0.5);
+    }
     .zs-card {
       background: var(--zs-glass);
       backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
       border: 1px solid var(--zs-border);
       border-radius: 16px; padding: 32px;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                  border-color 0.4s ease, box-shadow 0.4s ease;
       position: relative; overflow: hidden;
       cursor: pointer; display: flex; flex-direction: column; justify-content: space-between;
     }
     .zs-card::before {
-      content: ''; position: absolute; top: 0; left: -100%;
-      width: 100%; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.05), transparent);
+      content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.08), transparent);
       transition: left 0.6s ease;
     }
     .zs-card:hover::before { left: 100%; }
     .zs-card:hover {
-      border-color: rgba(0, 212, 255, 0.4);
-      box-shadow: 0 0 30px rgba(0, 212, 255, 0.2), 0 8px 32px rgba(0, 0, 0, 0.4);
-      transform: translateY(-8px);
+      transform: translateY(-10px) scale(1.02); border-color: var(--zs-cyan);
+      box-shadow: 0 10px 30px -10px rgba(0, 212, 255, 0.4), 0 0 20px rgba(0, 136, 255, 0.2);
     }
     .zs-card-icon {
       width: 56px; height: 56px; border-radius: 12px;
       background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(0, 136, 255, 0.1));
       border: 1px solid var(--zs-border);
       display: flex; align-items: center; justify-content: center;
-      font-size: 24px; margin-bottom: 20px;
-      box-shadow: 0 0 15px rgba(0, 212, 255, 0.1);
+      font-size: 24px; margin-bottom: 20px; box-shadow: 0 0 15px rgba(0, 212, 255, 0.1);
     }
-    .zs-card h3 {
-      font-size: 20px; font-weight: 600; margin-bottom: 8px;
-      letter-spacing: 1px;
-    }
+    .zs-card h3 { font-size: 20px; font-weight: 600; margin-bottom: 8px; letter-spacing: 1px; }
     .zs-card p { color: var(--zs-text-2); font-size: 15px; line-height: 1.6; margin-bottom: 16px; }
     .zs-price {
       font-size: 32px; font-weight: 700; color: var(--zs-cyan);
-      text-shadow: 0 0 15px var(--zs-cyan-glow);
-      font-variant-numeric: tabular-nums; margin-bottom: 16px;
+      text-shadow: 0 0 15px var(--zs-cyan-glow); font-variant-numeric: tabular-nums; margin-bottom: 16px;
     }
     .zs-card-buy {
       font-size: 13px; font-weight: 700; text-transform: uppercase;
       letter-spacing: 1px; color: var(--zs-cyan); display: flex; align-items: center; gap: 6px;
     }
 
+    /* ===== REVIEWS SECTION ===== */
+    .zs-reviews-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .zs-review-card {
+      background: var(--zs-glass); border: 1px solid var(--zs-border);
+      border-radius: 16px; padding: 24px; backdrop-filter: blur(12px);
+    }
+    .zs-review-stars { color: #ffcc00; font-size: 16px; margin-bottom: 12px; }
+    .zs-review-text { font-size: 14px; color: var(--zs-text-2); line-height: 1.6; margin-bottom: 16px; }
+    .zs-review-author { font-size: 15px; font-weight: 600; color: var(--zs-text); }
+    .zs-review-tag { font-size: 12px; color: var(--zs-cyan); margin-top: 2px; }
+
+    /* ===== FAQ SECTION ===== */
+    .zs-faq-container { max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
+    .zs-faq-item {
+      background: var(--zs-glass); border: 1px solid var(--zs-border);
+      border-radius: 12px; overflow: hidden;
+    }
+    .zs-faq-question {
+      width: 100%; padding: 20px; text-align: left; font-size: 16px; font-weight: 600;
+      color: var(--zs-text); display: flex; justify-content: space-between; align-items: center;
+      cursor: pointer;
+    }
+    .zs-faq-answer {
+      padding: 0 20px 20px 20px; font-size: 14px; color: var(--zs-text-2);
+      line-height: 1.6; display: none;
+    }
+    .zs-faq-item.active .zs-faq-answer { display: block; }
+    .zs-faq-item.active .zs-faq-icon { transform: rotate(180deg); color: var(--zs-cyan); }
+    .zs-faq-icon { transition: transform 0.3s ease; }
+
     /* ===== FEATURES ===== */
     .zs-features { background: var(--zs-bg-2); }
     .zs-feature { text-align: center; padding: 24px; }
     .zs-feature-icon {
-      width: 64px; height: 64px; margin: 0 auto 20px;
-      border-radius: 50%;
+      width: 64px; height: 64px; margin: 0 auto 20px; border-radius: 50%;
       background: linear-gradient(135deg, rgba(0, 212, 255, 0.12), rgba(0, 136, 255, 0.08));
-      border: 1px solid var(--zs-border);
-      display: flex; align-items: center; justify-content: center;
+      border: 1px solid var(--zs-border); display: flex; align-items: center; justify-content: center;
       box-shadow: 0 0 20px rgba(0, 212, 255, 0.08);
     }
     .zs-feature-icon svg { width: 28px; height: 28px; stroke: var(--zs-cyan); }
@@ -257,61 +319,46 @@
 
     /* ===== CONTACT ===== */
     .zs-contact-card {
-      max-width: 500px; margin: 0 auto;
-      background: var(--zs-glass);
+      max-width: 500px; margin: 0 auto; background: var(--zs-glass);
       backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-      border: 1px solid var(--zs-border);
-      border-radius: 20px; padding: 48px;
-      text-align: center;
+      border: 1px solid var(--zs-border); border-radius: 20px; padding: 48px; text-align: center;
     }
     .zs-contact-card p { font-size: 18px; color: var(--zs-text-2); margin-bottom: 24px; }
     .zs-contact-card .zs-btn { width: 100%; }
 
     /* ===== FOOTER ===== */
     .zs-footer {
-      text-align: center; padding: 32px 24px;
-      border-top: 1px solid var(--zs-border);
-      color: var(--zs-text-2); font-size: 14px;
-      position: relative; z-index: 1;
+      text-align: center; padding: 32px 24px; border-top: 1px solid var(--zs-border);
+      color: var(--zs-text-2); font-size: 14px; position: relative; z-index: 1;
     }
+    .zs-footer-credit { color: var(--zs-cyan); font-weight: 600; margin-top: 6px; }
 
     /* ===== FLOATING WHATSAPP ===== */
     .zs-float {
-      position: fixed; bottom: 24px; right: 24px;
-      width: 60px; height: 60px; border-radius: 50%;
-      background: #25d366; z-index: 100;
-      display: flex; align-items: center; justify-content: center;
+      position: fixed; bottom: 24px; right: 24px; width: 60px; height: 60px; border-radius: 50%;
+      background: #25d366; z-index: 100; display: flex; align-items: center; justify-content: center;
       box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4), 0 0 30px rgba(37, 211, 102, 0.2);
-      animation: zs-float-bounce 2.5s ease-in-out infinite;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      animation: zs-float-bounce 2.5s ease-in-out infinite; transition: transform 0.3s ease;
     }
-    .zs-float:hover {
-      transform: scale(1.1);
-      box-shadow: 0 6px 30px rgba(37, 211, 102, 0.6), 0 0 40px rgba(37, 211, 102, 0.3);
-    }
+    .zs-float:hover { transform: scale(1.1); }
     .zs-float svg { width: 32px; height: 32px; fill: white; }
-    @keyframes zs-float-bounce {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
-    }
+    @keyframes zs-float-bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 
     /* ===== MOBILE ===== */
     @media (max-width: 768px) {
       .zs-nav-links {
-        position: absolute; top: 64px; left: 0; right: 0;
-        background: rgba(3, 3, 8, 0.98);
-        flex-direction: column; padding: 24px; gap: 20px;
-        border-bottom: 1px solid var(--zs-border);
+        position: absolute; top: 64px; left: 0; right: 0; background: rgba(3, 3, 8, 0.98);
+        flex-direction: column; padding: 24px; gap: 20px; border-bottom: 1px solid var(--zs-border);
         display: none;
       }
       .zs-nav-links.open { display: flex; }
       .zs-nav-toggle { display: block; }
-      .zs-hero-title { font-size: 32px; }
+      .zs-hero-title { font-size: 34px; }
       .zs-hero-subtitle { font-size: 16px; }
       .zs-hero-logo svg { max-width: 180px; }
       .zs-section { padding: 40px 20px; }
       .zs-section-title { font-size: 24px; }
-      .zs-grid-2, .zs-grid-3, .zs-grid-4 { grid-template-columns: 1fr; }
+      .zs-grid-2, .zs-grid-3, .zs-grid-4, .zs-reviews-grid { grid-template-columns: 1fr; }
       .zs-tabs { flex-direction: column; }
       .zs-tab-btn { width: 100%; text-align: center; }
       .zs-contact-card { padding: 32px 24px; }
@@ -329,16 +376,27 @@
   <!-- PARTICLE CANVAS -->
   <canvas class="zs-canvas" id="zsCanvas"></canvas>
 
+  <!-- LIVE PROOF TICKER -->
+  <div class="zs-ticker">
+    <div class="zs-ticker-content">
+      <span class="zs-ticker-item"><span class="zs-ticker-dot"></span> Kavi_FF completed Weekly Pass Order! (2 mins ago)</span>
+      <span class="zs-ticker-item"><span class="zs-ticker-dot"></span> Admin Chamath created Gaming Logo for User_X (15 mins ago)</span>
+      <span class="zs-ticker-item"><span class="zs-ticker-dot"></span> Sahan_SL bought Monthly Membership! (30 mins ago)</span>
+      <span class="zs-ticker-item"><span class="zs-ticker-dot"></span> Dynamic_YT completed Video Edit Order! (1 hr ago)</span>
+      <!-- Duplicate for smooth seamless loop -->
+      <span class="zs-ticker-item"><span class="zs-ticker-dot"></span> Kavi_FF completed Weekly Pass Order! (2 mins ago)</span>
+      <span class="zs-ticker-item"><span class="zs-ticker-dot"></span> Admin Chamath created Gaming Logo for User_X (15 mins ago)</span>
+      <span class="zs-ticker-item"><span class="zs-ticker-dot"></span> Sahan_SL bought Monthly Membership! (30 mins ago)</span>
+    </div>
+  </div>
+
   <!-- NAVIGATION -->
   <nav class="zs-nav">
     <div class="zs-nav-inner">
       <a href="#home" class="zs-nav-brand">
-        <!-- VECTOR LOGO (Nav) -->
         <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M50 10 L85 45 L50 90 L15 45 Z" fill="url(#cyanGrad)" stroke="#00d4ff" stroke-width="2"/>
           <path d="M50 10 L50 90 M15 45 L85 45 M32 27.5 L68 62.5 M68 27.5 L32 62.5" stroke="#ffffff" stroke-opacity="0.4" stroke-width="1.5"/>
-          <path d="M10 50 Q 30 20, 50 20 Q 35 40, 10 50 Z" fill="#00d4ff" opacity="0.8"/>
-          <path d="M90 50 Q 70 20, 50 20 Q 65 40, 90 50 Z" fill="#0088ff" opacity="0.8"/>
           <defs>
             <linearGradient id="cyanGrad" x1="0%" y1="0%" x2="100%" y2="100%">
               <stop offset="0%" stop-color="#00d4ff"/>
@@ -351,7 +409,9 @@
       <button class="zs-nav-toggle" id="zsNavToggle" aria-label="Toggle menu">☰</button>
       <ul class="zs-nav-links" id="zsNavLinks">
         <li><a href="#home">Home</a></li>
-        <li><a href="#store">Store Services</a></li>
+        <li><a href="#store">Services</a></li>
+        <li><a href="#reviews">Reviews</a></li>
+        <li><a href="#faq">FAQ</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
     </div>
@@ -360,16 +420,9 @@
   <!-- HERO -->
   <section class="zs-hero" id="home">
     <div class="zs-hero-logo">
-      <!-- VECTOR LOGO (Hero) -->
       <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M100 20 L170 90 L100 180 L30 90 Z" fill="url(#heroGrad)" stroke="#00d4ff" stroke-width="3"/>
-        <path d="M100 20 L100 180 M30 90 L170 90 M65 55 L135 125 M135 55 L65 125" stroke="#ffffff" stroke-opacity="0.5" stroke-width="2"/>
-        <!-- Left Wing -->
-        <path d="M20 100 Q 60 40, 100 40 Q 70 80, 20 100 Z" fill="#00d4ff" opacity="0.85"/>
-        <path d="M10 120 Q 50 70, 90 60 Q 60 100, 10 120 Z" fill="#0088ff" opacity="0.7"/>
-        <!-- Right Wing -->
-        <path d="M180 100 Q 140 40, 100 40 Q 130 80, 180 100 Z" fill="#00d4ff" opacity="0.85"/>
-        <path d="M190 120 Q 150 70, 110 60 Q 140 100, 190 120 Z" fill="#0088ff" opacity="0.7"/>
+        <path d="M100 20 L100 180 M30 90 L170 90" stroke="#ffffff" stroke-opacity="0.5" stroke-width="2"/>
         <defs>
           <linearGradient id="heroGrad" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stop-color="#00d4ff"/>
@@ -380,16 +433,15 @@
     </div>
     <h1 class="zs-hero-title">Welcome to Zephyr Store</h1>
     <p class="zs-hero-subtitle">Sri Lanka's Trusted Gaming Store</p>
+    <div class="zs-creator-tag">Created by Admin Chamath</div>
     <div>
       <a href="#store" class="zs-btn zs-btn-primary">Explore Services</a>
     </div>
   </section>
 
-  <!-- STORE SERVICES (WITH TABS) -->
+  <!-- STORE SERVICES -->
   <section class="zs-section" id="store">
     <h2 class="zs-section-title">Our Services</h2>
-    
-    <!-- CATEGORY TOGGLE BUTTONS -->
     <div class="zs-tabs">
       <button class="zs-tab-btn active" data-tab="diamonds">💎 Diamond Prices</button>
       <button class="zs-tab-btn" data-tab="editing">🎨 Editing Services</button>
@@ -406,10 +458,11 @@
           </div>
           <div>
             <div class="zs-price">Rs. 190</div>
-            <div class="zs-card-buy">Click to order on WhatsApp ➔</div>
+            <div class="zs-card-buy">Click to order ➔</div>
           </div>
         </div>
         <div class="zs-card" onclick="orderWhatsApp('Weekly', 'Rs. 630')">
+          <span class="zs-card-badge">HOT</span>
           <div>
             <div class="zs-card-icon">💎</div>
             <h3>Weekly</h3>
@@ -417,10 +470,11 @@
           </div>
           <div>
             <div class="zs-price">Rs. 630</div>
-            <div class="zs-card-buy">Click to order on WhatsApp ➔</div>
+            <div class="zs-card-buy">Click to order ➔</div>
           </div>
         </div>
         <div class="zs-card" onclick="orderWhatsApp('Monthly', 'Rs. 2,980')">
+          <span class="zs-card-badge">POPULAR</span>
           <div>
             <div class="zs-card-icon">💎</div>
             <h3>Monthly</h3>
@@ -428,7 +482,7 @@
           </div>
           <div>
             <div class="zs-price">Rs. 2,980</div>
-            <div class="zs-card-buy">Click to order on WhatsApp ➔</div>
+            <div class="zs-card-buy">Click to order ➔</div>
           </div>
         </div>
       </div>
@@ -438,70 +492,76 @@
     <div class="zs-tab-panel" id="tab-editing">
       <div class="zs-grid zs-grid-3">
         <div class="zs-card" onclick="orderWhatsApp('Photo Editing', 'Rs. 250+')">
-          <div>
-            <div class="zs-card-icon">🖼️</div>
-            <h3>Photo Editing</h3>
-            <p>Professional photo retouching and enhancement.</p>
-          </div>
-          <div>
-            <div class="zs-price">Rs. 250+</div>
-            <div class="zs-card-buy">Click to order on WhatsApp ➔</div>
-          </div>
+          <div><div class="zs-card-icon">🖼️</div><h3>Photo Editing</h3><p>Professional photo retouching.</p></div>
+          <div><div class="zs-price">Rs. 250+</div><div class="zs-card-buy">Click to order ➔</div></div>
         </div>
         <div class="zs-card" onclick="orderWhatsApp('Gaming Poster', 'Rs. 350+')">
-          <div>
-            <div class="zs-card-icon">🎮</div>
-            <h3>Gaming Poster</h3>
-            <p>Eye-catching posters for your gaming content.</p>
-          </div>
-          <div>
-            <div class="zs-price">Rs. 350+</div>
-            <div class="zs-card-buy">Click to order on WhatsApp ➔</div>
-          </div>
+          <span class="zs-card-badge">HOT</span>
+          <div><div class="zs-card-icon">🎮</div><h3>Gaming Poster</h3><p>Eye-catching gaming designs.</p></div>
+          <div><div class="zs-price">Rs. 350+</div><div class="zs-card-buy">Click to order ➔</div></div>
         </div>
         <div class="zs-card" onclick="orderWhatsApp('Thumbnail Design', 'Rs. 300+')">
-          <div>
-            <div class="zs-card-icon">🔥</div>
-            <h3>Thumbnail Design</h3>
-            <p>Click-worthy thumbnails that drive views.</p>
-          </div>
-          <div>
-            <div class="zs-price">Rs. 300+</div>
-            <div class="zs-card-buy">Click to order on WhatsApp ➔</div>
-          </div>
+          <div><div class="zs-card-icon">🔥</div><h3>Thumbnail Design</h3><p>Click-worthy YT thumbnails.</p></div>
+          <div><div class="zs-price">Rs. 300+</div><div class="zs-card-buy">Click to order ➔</div></div>
         </div>
-        <div class="zs-card" onclick="orderWhatsApp('Social Media Post', 'Rs. 250+')">
-          <div>
-            <div class="zs-card-icon">📱</div>
-            <h3>Social Media Post</h3>
-            <p>Stunning posts for all your social platforms.</p>
-          </div>
-          <div>
-            <div class="zs-price">Rs. 250+</div>
-            <div class="zs-card-buy">Click to order on WhatsApp ➔</div>
-          </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CUSTOMER REVIEWS -->
+  <section class="zs-section" id="reviews">
+    <h2 class="zs-section-title">Customer Reviews</h2>
+    <div class="zs-reviews-grid">
+      <div class="zs-review-card">
+        <div class="zs-review-stars">★★★★★</div>
+        <p class="zs-review-text">"Supiriya! Super fast delivery. Minute 5n Diamond tika account ekata awa. Trustworthy service Chamath bro!"</p>
+        <div class="zs-review-author">Kavishka Gamage</div>
+        <div class="zs-review-tag">Verified Buyer • FF Top-Up</div>
+      </div>
+      <div class="zs-review-card">
+        <div class="zs-review-stars">★★★★★</div>
+        <p class="zs-review-text">"Pattama YouTube thumbnail design ekak karala dunna. Quality eka hodai highly recommended!"</p>
+        <div class="zs-review-author">DarkRider Gaming</div>
+        <div class="zs-review-tag">Verified Buyer • Thumbnail Design</div>
+      </div>
+      <div class="zs-review-card">
+        <div class="zs-review-stars">★★★★★</div>
+        <p class="zs-review-text">"100% Safe and trusted store. Safe top-up and genuine work. Awlakma na guys."</p>
+        <div class="zs-review-author">Shehan Perera</div>
+        <div class="zs-review-tag">Verified Buyer • Weekly Membership</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ SECTION -->
+  <section class="zs-section" id="faq">
+    <h2 class="zs-section-title">Frequently Asked Questions</h2>
+    <div class="zs-faq-container">
+      <div class="zs-faq-item">
+        <button class="zs-faq-question">
+          <span>How long does it take to process an order?</span>
+          <span class="zs-faq-icon">▼</span>
+        </button>
+        <div class="zs-faq-answer">
+          Usually top-ups are completed within 5-15 minutes after payment confirmation!
         </div>
-        <div class="zs-card" onclick="orderWhatsApp('Logo Design', 'Rs. 350+')">
-          <div>
-            <div class="zs-card-icon">✨</div>
-            <h3>Logo Design</h3>
-            <p>Unique logos that define your brand identity.</p>
-          </div>
-          <div>
-            <div class="zs-price">Rs. 350+</div>
-            <div class="zs-card-buy">Click to order on WhatsApp ➔</div>
-          </div>
+      </div>
+      <div class="zs-faq-item">
+        <button class="zs-faq-question">
+          <span>What payment methods do you accept?</span>
+          <span class="zs-faq-icon">▼</span>
+        </button>
+        <div class="zs-faq-answer">
+          We accept Online Bank Transfers (BOC, Commercial Bank, Sampath, EzCash, etc.). Contact us on WhatsApp for account details.
         </div>
-        <div class="zs-card" onclick="orderWhatsApp('Video Editing', 'Rs. 400+')">
-          <div>
-            <div class="zs-card-icon">🎬</div>
-            <h3>Video Editing</h3>
-            <p>Smooth edits with effects and transitions.</p>
-          </div>
-          <div>
-            <div class="zs-price">Rs. 400+</div>
-            <div class="zs-card-buy">Click to order on WhatsApp ➔</div>
-          </div>
+      </div>
+      <div class="zs-faq-item">
+        <button class="zs-faq-question">
+          <span>Is Zephyr Store 100% Safe & Legitimate?</span>
+          <span class="zs-faq-icon">▼</span>
+        </button>
+        <div class="zs-faq-answer">
+          Yes! Managed directly by Admin Chamath, we provide 100% safe top-ups without any account ban risks.
         </div>
       </div>
     </div>
@@ -512,32 +572,24 @@
     <h2 class="zs-section-title">Why Choose Us</h2>
     <div class="zs-grid zs-grid-4">
       <div class="zs-feature">
-        <div class="zs-feature-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-        </div>
+        <div class="zs-feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
         <h3>Fast Delivery</h3>
-        <p>Quick turnaround on all orders and services.</p>
+        <p>Quick turnaround on all orders.</p>
       </div>
       <div class="zs-feature">
-        <div class="zs-feature-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
-        </div>
+        <div class="zs-feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
         <h3>Trusted Service</h3>
-        <p>Reliable and dependable every single time.</p>
+        <p>Reliable and dependable every time.</p>
       </div>
       <div class="zs-feature">
-        <div class="zs-feature-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
-        </div>
+        <div class="zs-feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/></svg></div>
         <h3>Secure Payments</h3>
-        <p>Safe and protected transaction methods.</p>
+        <p>Safe & protected transaction methods.</p>
       </div>
       <div class="zs-feature">
-        <div class="zs-feature-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
-        </div>
+        <div class="zs-feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8L3 21l1.9-5.7"/></svg></div>
         <h3>Friendly Support</h3>
-        <p>Always here to help with a smile.</p>
+        <p>Always here to help you.</p>
       </div>
     </div>
   </section>
@@ -548,7 +600,6 @@
     <div class="zs-contact-card">
       <p>Ready to place an order or have questions? Reach out to us directly on WhatsApp!</p>
       <a href="https://wa.me/94742605032" target="_blank" class="zs-btn zs-btn-primary">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.008-.57-.008-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
         +94 74 260 5032
       </a>
     </div>
@@ -557,6 +608,7 @@
   <!-- FOOTER -->
   <footer class="zs-footer">
     <p>© 2026 Zephyr Store. All Rights Reserved.</p>
+    <p class="zs-footer-credit">Created by Admin Chamath</p>
   </footer>
 
   <!-- FLOATING WHATSAPP -->
@@ -565,143 +617,71 @@
   </a>
 
   <script>
-    // ===== WHATSAPP ORDER FUNCTION =====
     function orderWhatsApp(itemName, itemPrice) {
       var phone = "94742605032";
       var message = "Hi, I want " + itemName + " - " + itemPrice;
-      var url = "https://wa.me/" + phone + "?text=" + encodeURIComponent(message);
-      window.open(url, '_blank');
+      window.open("https://wa.me/" + phone + "?text=" + encodeURIComponent(message), '_blank');
     }
 
     (function() {
-      // ===== LOADING SCREEN =====
       window.addEventListener('load', function() {
-        setTimeout(function() {
-          document.getElementById('zsLoader').classList.add('hidden');
-        }, 1200);
+        setTimeout(function() { document.getElementById('zsLoader').classList.add('hidden'); }, 1000);
       });
 
-      // ===== TAB SWITCHING LOGIC =====
+      // TABS
       var tabBtns = document.querySelectorAll('.zs-tab-btn');
       var tabPanels = document.querySelectorAll('.zs-tab-panel');
-
       tabBtns.forEach(function(btn) {
         btn.addEventListener('click', function() {
           var targetTab = this.getAttribute('data-tab');
-
           tabBtns.forEach(function(b) { b.classList.remove('active'); });
           tabPanels.forEach(function(p) { p.classList.remove('active'); });
-
           this.classList.add('active');
           document.getElementById('tab-' + targetTab).classList.add('active');
         });
       });
 
-      // ===== PARTICLE SYSTEM =====
+      // FAQ ACCORDION
+      var faqItems = document.querySelectorAll('.zs-faq-item');
+      faqItems.forEach(function(item) {
+        item.querySelector('.zs-faq-question').addEventListener('click', function() {
+          var isOpen = item.classList.contains('active');
+          faqItems.forEach(function(i) { i.classList.remove('active'); });
+          if (!isOpen) item.classList.add('active');
+        });
+      });
+
+      // CANVAS PARTICLES
       var canvas = document.getElementById('zsCanvas');
       var ctx = canvas.getContext('2d');
-      var particles = [];
+      function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+      window.addEventListener('resize', resize); resize();
 
-      function resizeCanvas() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-      }
-      window.addEventListener('resize', resizeCanvas);
-      resizeCanvas();
+      var particles = Array.from({length: 50}, function() {
+        return {
+          x: Math.random() * canvas.width, y: Math.random() * canvas.height,
+          s: Math.random() * 2 + 0.5, dx: (Math.random() - 0.5) * 0.4, dy: (Math.random() - 0.5) * 0.4
+        };
+      });
 
-      function Particle() { this.reset(); }
-      Particle.prototype.reset = function() {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 2 + 0.5;
-        this.speedX = (Math.random() - 0.5) * 0.4;
-        this.speedY = (Math.random() - 0.5) * 0.4;
-        this.opacity = Math.random() * 0.4 + 0.1;
-      };
-      Particle.prototype.update = function() {
-        this.x += this.speedX;
-        this.y += this.speedY;
-        if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
-          this.reset();
-        }
-      };
-      Particle.prototype.draw = function() {
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(0, 212, 255, ' + this.opacity + ')';
-        ctx.shadowBlur = 8;
-        ctx.shadowColor = 'rgba(0, 212, 255, 0.5)';
-        ctx.fill();
-        ctx.shadowBlur = 0;
-      };
-
-      for (var i = 0; i < 60; i++) particles.push(new Particle());
-
-      function drawConnections() {
-        for (var i = 0; i < particles.length; i++) {
-          for (var j = i + 1; j < particles.length; j++) {
-            var dx = particles[i].x - particles[j].x;
-            var dy = particles[i].y - particles[j].y;
-            var dist = Math.sqrt(dx * dx + dy * dy);
-            if (dist < 120) {
-              ctx.beginPath();
-              ctx.moveTo(particles[i].x, particles[i].y);
-              ctx.lineTo(particles[j].x, particles[j].y);
-              ctx.strokeStyle = 'rgba(0, 212, 255, ' + (0.08 * (1 - dist / 120)) + ')';
-              ctx.lineWidth = 0.5;
-              ctx.stroke();
-            }
-          }
-        }
-      }
-
-      function animateParticles() {
+      function animate() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        for (var i = 0; i < particles.length; i++) {
-          particles[i].update();
-          particles[i].draw();
-        }
-        drawConnections();
-        requestAnimationFrame(animateParticles);
+        particles.forEach(function(p) {
+          p.x += p.dx; p.y += p.dy;
+          if (p.x < 0 || p.x > canvas.width || p.y < 0 || p.y > canvas.height) {
+            p.x = Math.random() * canvas.width; p.y = Math.random() * canvas.height;
+          }
+          ctx.beginPath(); ctx.arc(p.x, p.y, p.s, 0, Math.PI*2);
+          ctx.fillStyle = 'rgba(0, 212, 255, 0.3)'; ctx.fill();
+        });
+        requestAnimationFrame(animate);
       }
-      animateParticles();
+      animate();
 
-      // ===== MOBILE NAV TOGGLE =====
+      // MOBILE NAV
       var navToggle = document.getElementById('zsNavToggle');
       var navLinks = document.getElementById('zsNavLinks');
-      navToggle.addEventListener('click', function() {
-        navLinks.classList.toggle('open');
-        navToggle.textContent = navLinks.classList.contains('open') ? '✕' : '☰';
-      });
-      navLinks.querySelectorAll('a').forEach(function(link) {
-        link.addEventListener('click', function() {
-          navLinks.classList.remove('open');
-          navToggle.textContent = '☰';
-        });
-      });
-
-      // ===== SMOOTH SCROLL =====
-      document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
-        anchor.addEventListener('click', function(e) {
-          e.preventDefault();
-          var target = document.querySelector(this.getAttribute('href'));
-          if (target) {
-            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          }
-        });
-      });
-
-      // ===== NAV SCROLL EFFECT =====
-      var nav = document.querySelector('.zs-nav');
-      window.addEventListener('scroll', function() {
-        if (window.scrollY > 50) {
-          nav.style.background = 'rgba(3, 3, 8, 0.95)';
-          nav.style.boxShadow = '0 4px 30px rgba(0, 0, 0, 0.5)';
-        } else {
-          nav.style.background = 'rgba(3, 3, 8, 0.85)';
-          nav.style.boxShadow = 'none';
-        }
-      });
+      navToggle.addEventListener('click', function() { navLinks.classList.toggle('open'); });
     })();
   </script>
 </body>
