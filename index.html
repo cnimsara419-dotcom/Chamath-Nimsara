@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Zephyr Store — Sri Lanka's Trusted Gaming Store</title>
-  <meta name="description" content="Zephyr Store - Premium gaming diamonds and editing services in Sri Lanka. Fast delivery, trusted service, secure payments.">
-  <meta name="keywords" content="Zephyr Store, gaming store Sri Lanka, Free Fire diamonds, photo editing, video editing, logo design">
+  <meta name="description" content="Zephyr Store - Premium gaming diamonds, editing services, and Free Fire tournaments in Sri Lanka. Fast delivery, trusted service, secure payments.">
+  <meta name="keywords" content="Zephyr Store, gaming store Sri Lanka, Free Fire diamonds, photo editing, video editing, logo design, free fire tournament">
   <style>
     :root {
       --zs-bg: #030308;
@@ -269,6 +269,22 @@
       display: flex; align-items: center; justify-content: center;
     }
 
+    /* ===== TOURNAMENT SPECIFIC STYLES ===== */
+    .zs-tournament-card {
+      max-width: 650px; margin: 0 auto; background: var(--zs-glass);
+      border: 1px solid var(--zs-cyan); border-radius: 20px; padding: 30px;
+      box-shadow: 0 0 25px rgba(0, 212, 255, 0.2);
+    }
+    .zs-tournament-banner {
+      width: 100%; height: 220px; border-radius: 12px; object-fit: cover;
+      margin-bottom: 20px; border: 1px solid var(--zs-border);
+    }
+    .zs-slot-badge {
+      display: inline-block; background: rgba(0, 212, 255, 0.2);
+      border: 1px solid var(--zs-cyan); color: var(--zs-cyan);
+      padding: 6px 16px; border-radius: 20px; font-weight: 700; font-size: 14px; margin-bottom: 15px;
+    }
+
     /* ===== REVIEWS SECTION ===== */
     .zs-reviews-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
     .zs-review-card { background: var(--zs-glass); border: 1px solid var(--zs-border); border-radius: 16px; padding: 24px; }
@@ -447,8 +463,10 @@
       <div class="zs-tabs">
         <button class="zs-tab-btn active" data-tab="diamonds">💎 Diamond Prices</button>
         <button class="zs-tab-btn" data-tab="editing">🎨 Editing Services</button>
+        <button class="zs-tab-btn" data-tab="tournaments">🏆 Tournaments</button>
       </div>
 
+      <!-- TAB 1: DIAMONDS -->
       <div class="zs-tab-panel active" id="tab-diamonds">
         <div class="zs-grid zs-grid-3">
           <div class="zs-card">
@@ -486,6 +504,7 @@
         </div>
       </div>
 
+      <!-- TAB 2: EDITING -->
       <div class="zs-tab-panel" id="tab-editing">
         <div class="zs-grid zs-grid-3">
           <div class="zs-card">
@@ -550,6 +569,36 @@
               </div>
             </div>
           </div>
+        </div>
+      </div>
+
+      <!-- TAB 3: TOURNAMENTS -->
+      <div class="zs-tab-panel" id="tab-tournaments">
+        <div class="zs-tournament-card">
+          <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1000&q=80" alt="Free Fire Tournament" class="zs-tournament-banner">
+          <h3 style="font-size: 26px; font-weight: 800; color: #fff; margin-bottom: 8px;">🏆 OUR TOURNAMENT</h3>
+          <p style="color: var(--zs-text-2); margin-bottom: 16px;">Join the ultimate Free Fire Battle! Show your skills and win cash prizes.</p>
+          
+          <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 20px;">
+            <div class="zs-slot-badge">💰 Registration Fee: Rs. 100</div>
+            <div class="zs-slot-badge" id="slotDisplay" style="background: rgba(0, 255, 136, 0.15); border-color: #00ff88; color: #00ff88;">👥 Slots — 0/16</div>
+          </div>
+
+          <form onsubmit="handleTournamentRegistration(event)">
+            <div class="zs-form-group">
+              <label>👤 Player Name</label>
+              <input type="text" id="tourneyPlayerName" class="zs-form-input" placeholder="e.g. Chama_YT" required>
+            </div>
+            <div class="zs-form-group">
+              <label>🆔 Free Fire UID</label>
+              <input type="number" id="tourneyFFUID" class="zs-form-input" placeholder="e.g. 3092669400" required>
+            </div>
+            <div class="zs-form-group">
+              <label>📱 WhatsApp Number</label>
+              <input type="tel" id="tourneyWhatsApp" class="zs-form-input" placeholder="e.g. 0771234567" required>
+            </div>
+            <button type="submit" id="tourneySubmitBtn" class="zs-btn zs-btn-primary" style="width: 100%; margin-top: 10px;">💳 Register & Pay Step</button>
+          </form>
         </div>
       </div>
 
@@ -678,6 +727,59 @@
     var autoHomeTimer;
     var cart = [];
     var currentUser = JSON.parse(localStorage.getItem('zephyrUser')) || null;
+    
+    // TOURNAMENT SYSTEM LOGIC
+    var currentRegisteredSlots = parseInt(localStorage.getItem('tourneySlots')) || 0;
+    var maxSlots = 16;
+
+    function updateSlotUI() {
+      var slotDisplay = document.getElementById('slotDisplay');
+      var submitBtn = document.getElementById('tourneySubmitBtn');
+      if (currentRegisteredSlots >= maxSlots) {
+        slotDisplay.innerText = '🔒 Registration Closed (16/16)';
+        slotDisplay.style.borderColor = '#ff0055';
+        slotDisplay.style.color = '#ff0055';
+        slotDisplay.style.background = 'rgba(ff, 0, 85, 0.15)';
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.innerText = '🔒 Registration Closed';
+          submitBtn.style.opacity = '0.5';
+          submitBtn.style.cursor = 'not-allowed';
+        }
+      } else {
+        slotDisplay.innerText = '👥 Slots — ' + currentRegisteredSlots + '/' + maxSlots;
+      }
+    }
+
+    function handleTournamentRegistration(e) {
+      e.preventDefault();
+      if (currentRegisteredSlots >= maxSlots) {
+        alert('🔒 Registration Closed! 16/16 Slots are full.');
+        return;
+      }
+
+      var playerName = document.getElementById('tourneyPlayerName').value.trim();
+      var ffUID = document.getElementById('tourneyFFUID').value.trim();
+      var whatsApp = document.getElementById('tourneyWhatsApp').value.trim();
+
+      currentRegisteredSlots++;
+      localStorage.setItem('tourneySlots', currentRegisteredSlots);
+      updateSlotUI();
+
+      var formattedSlot = currentRegisteredSlots < 10 ? '0' + currentRegisteredSlots : currentRegisteredSlots;
+      
+      var message = "🏆 *FREE FIRE TOURNAMENT REGISTRATION*\n\n" +
+                    "🎮 Player Name: " + playerName + "\n" +
+                    "🆔 FF UID: " + ffUID + "\n" +
+                    "📱 WhatsApp: " + whatsApp + "\n" +
+                    "💰 Registration Fee: Rs.100\n" +
+                    "🏆 Slot #" + formattedSlot + "\n\n" +
+                    "✅ Payment verify කළාම slot එක confirm කිරීම\n" +
+                    "📲 Waiting for WhatsApp confirmation";
+
+      var phone = "94742605032";
+      window.open("https://wa.me/" + phone + "?text=" + encodeURIComponent(message), '_blank');
+    }
 
     function initUserUI() {
       var userBtn = document.getElementById('userBtn');
@@ -809,6 +911,7 @@
     (function() {
       window.addEventListener('load', function() {
         initUserUI();
+        updateSlotUI();
         setTimeout(function() { document.getElementById('zsLoader').classList.add('hidden'); }, 1000);
       });
 
