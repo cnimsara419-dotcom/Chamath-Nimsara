@@ -6,6 +6,11 @@
   <title>Zephyr Store — Sri Lanka's Trusted Gaming Store</title>
   <meta name="description" content="Zephyr Store - Premium gaming diamonds, editing services, and Free Fire tournaments in Sri Lanka. Fast delivery, trusted service, secure payments.">
   <meta name="keywords" content="Zephyr Store, gaming store Sri Lanka, Free Fire diamonds, photo editing, video editing, logo design, free fire tournament">
+  
+  <!-- FIREBASE SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
   <style>
     :root {
       --zs-bg: #030308;
@@ -115,22 +120,24 @@
       font-size: 18px; letter-spacing: 2px; text-transform: uppercase; cursor: pointer;
     }
     .zs-nav-brand svg { height: 36px; width: auto; filter: drop-shadow(0 0 8px rgba(0, 212, 255, 0.6)); }
-    .zs-nav-links { display: flex; gap: 20px; align-items: center; }
+    .zs-nav-links { display: flex; gap: 16px; align-items: center; }
     .zs-nav-links a {
-      font-size: 14px; font-weight: 500; color: var(--zs-text-2);
+      font-size: 13px; font-weight: 500; color: var(--zs-text-2);
       letter-spacing: 1px; text-transform: uppercase;
       transition: color 0.3s ease; position: relative; cursor: pointer;
     }
     .zs-nav-links a.active, .zs-nav-links a:hover { color: var(--zs-cyan); }
     .zs-nav-toggle { display: none; color: var(--zs-text); font-size: 24px; }
 
-    .zs-cart-btn, .zs-user-btn {
-      padding: 6px 14px; border-radius: 20px; border: 1px solid var(--zs-cyan);
+    .zs-cart-btn, .zs-user-btn, .zs-wallet-btn, .zs-admin-nav-btn {
+      padding: 6px 12px; border-radius: 20px; border: 1px solid var(--zs-cyan);
       background: rgba(0, 212, 255, 0.1); color: var(--zs-cyan);
-      font-weight: 600; font-size: 13px; display: inline-flex; align-items: center; gap: 6px;
+      font-weight: 600; font-size: 12px; display: inline-flex; align-items: center; gap: 6px;
       transition: all 0.3s ease; cursor: pointer;
     }
-    .zs-cart-btn:hover, .zs-user-btn:hover { background: var(--zs-cyan); color: #000; box-shadow: 0 0 15px var(--zs-cyan-glow); }
+    .zs-cart-btn:hover, .zs-user-btn:hover, .zs-wallet-btn:hover { background: var(--zs-cyan); color: #000; box-shadow: 0 0 15px var(--zs-cyan-glow); }
+    .zs-admin-nav-btn { border-color: #ef4444; color: #ef4444; background: rgba(239, 68, 68, 0.1); }
+    .zs-admin-nav-btn:hover { background: #ef4444; color: #fff; }
     .zs-cart-badge { background: #ff0055; color: #fff; font-size: 11px; padding: 2px 6px; border-radius: 10px; font-weight: 800; }
 
     /* ===== PAGE CONTAINERS ===== */
@@ -172,29 +179,49 @@
     .zs-hero {
       text-align: center;
       display: flex; flex-direction: column; align-items: center; justify-content: center;
-      padding: 60px 0;
+      padding: 40px 0;
     }
-    .zs-hero-logo { margin-bottom: 24px; }
-    .zs-hero-logo svg { max-width: 220px; width: 100%; height: auto; filter: drop-shadow(0 0 30px rgba(0, 212, 255, 0.5)); }
+    .zs-hero-logo { margin-bottom: 20px; }
+    .zs-hero-logo svg { max-width: 180px; width: 100%; height: auto; filter: drop-shadow(0 0 30px rgba(0, 212, 255, 0.5)); }
     .zs-hero-title {
-      font-size: 48px; font-weight: 800; margin-bottom: 16px;
-      text-transform: uppercase; letter-spacing: 5px;
+      font-size: 42px; font-weight: 800; margin-bottom: 12px;
+      text-transform: uppercase; letter-spacing: 4px;
       background: linear-gradient(135deg, #ffffff 20%, #00d4ff 60%, #0088ff 100%);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent;
       filter: drop-shadow(0 0 20px var(--zs-cyan-glow));
     }
-    .zs-hero-subtitle { font-size: 20px; color: var(--zs-text-2); margin-bottom: 12px; letter-spacing: 2px; }
+    .zs-hero-subtitle { font-size: 18px; color: var(--zs-text-2); margin-bottom: 24px; letter-spacing: 2px; }
+    
+    .zs-explore-btn {
+      margin-bottom: 20px;
+      padding: 16px 36px;
+      font-size: 16px;
+      font-weight: 700;
+      border-radius: 30px;
+      background: linear-gradient(135deg, var(--zs-cyan), var(--zs-blue));
+      color: #000;
+      box-shadow: 0 0 25px var(--zs-cyan-glow);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    .zs-explore-btn:hover {
+      transform: translateY(-4px) scale(1.03);
+      box-shadow: 0 0 40px var(--zs-cyan-glow);
+    }
+
     .zs-creator-tag {
-      font-size: 14px; font-weight: 600; color: var(--zs-cyan);
-      letter-spacing: 2px; text-transform: uppercase; margin-bottom: 32px;
+      font-size: 13px; font-weight: 600; color: var(--zs-cyan);
+      letter-spacing: 2px; text-transform: uppercase;
       text-shadow: 0 0 10px var(--zs-cyan-glow);
     }
 
     /* ===== BUTTONS ===== */
     .zs-btn {
       display: inline-flex; align-items: center; justify-content: center;
-      gap: 8px; padding: 14px 32px; border-radius: 10px;
-      font-size: 15px; font-weight: 600; letter-spacing: 1px;
+      gap: 8px; padding: 12px 28px; border-radius: 10px;
+      font-size: 14px; font-weight: 600; letter-spacing: 1px;
       text-transform: uppercase; transition: all 0.35s ease; cursor: pointer; border: none;
     }
     .zs-btn-primary {
@@ -244,19 +271,19 @@
     }
     .zs-card {
       background: var(--zs-glass); backdrop-filter: blur(16px);
-      border: 1px solid var(--zs-border); border-radius: 16px; padding: 32px;
+      border: 1px solid var(--zs-border); border-radius: 16px; padding: 28px;
       transition: all 0.3s ease; display: flex;
       flex-direction: column; justify-content: space-between; position: relative;
     }
     .zs-card:hover { transform: translateY(-5px); border-color: var(--zs-cyan); box-shadow: 0 0 20px rgba(0, 212, 255, 0.3); }
     .zs-card-icon {
-      width: 56px; height: 56px; border-radius: 12px;
+      width: 50px; height: 50px; border-radius: 12px;
       background: rgba(0, 212, 255, 0.1); border: 1px solid var(--zs-border);
-      display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 20px;
+      display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 16px;
     }
     .zs-card h3 { font-size: 20px; font-weight: 600; margin-bottom: 8px; }
-    .zs-card p { color: var(--zs-text-2); font-size: 15px; margin-bottom: 16px; }
-    .zs-price { font-size: 32px; font-weight: 700; color: var(--zs-cyan); margin-bottom: 16px; }
+    .zs-card p { color: var(--zs-text-2); font-size: 14px; margin-bottom: 16px; }
+    .zs-price { font-size: 28px; font-weight: 700; color: var(--zs-cyan); margin-bottom: 16px; }
     
     .zs-card-actions { display: flex; gap: 10px; width: 100%; margin-top: 10px; }
     .zs-card-btn-buy {
@@ -269,14 +296,14 @@
       display: flex; align-items: center; justify-content: center;
     }
 
-    /* ===== TOURNAMENT SPECIFIC STYLES ===== */
+    /* TOURNAMENT */
     .zs-tournament-card {
       max-width: 650px; margin: 0 auto; background: var(--zs-glass);
       border: 1px solid var(--zs-cyan); border-radius: 20px; padding: 30px;
       box-shadow: 0 0 25px rgba(0, 212, 255, 0.2);
     }
     .zs-tournament-banner {
-      width: 100%; height: 220px; border-radius: 12px; object-fit: cover;
+      width: 100%; height: 200px; border-radius: 12px; object-fit: cover;
       margin-bottom: 20px; border: 1px solid var(--zs-border);
     }
     .zs-slot-badge {
@@ -285,7 +312,7 @@
       padding: 6px 16px; border-radius: 20px; font-weight: 700; font-size: 14px; margin-bottom: 15px;
     }
 
-    /* ===== REVIEWS SECTION ===== */
+    /* REVIEWS & FAQ */
     .zs-reviews-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
     .zs-review-card { background: var(--zs-glass); border: 1px solid var(--zs-border); border-radius: 16px; padding: 24px; }
     .zs-review-stars { color: #ffcc00; font-size: 16px; margin-bottom: 12px; }
@@ -293,18 +320,16 @@
     .zs-review-author { font-size: 15px; font-weight: 600; }
     .zs-review-tag { font-size: 12px; color: var(--zs-cyan); margin-top: 2px; }
 
-    /* ===== FAQ SECTION ===== */
     .zs-faq-container { max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
     .zs-faq-item { background: var(--zs-glass); border: 1px solid var(--zs-border); border-radius: 12px; overflow: hidden; }
     .zs-faq-question { width: 100%; padding: 20px; text-align: left; font-size: 16px; font-weight: 600; color: var(--zs-text); display: flex; justify-content: space-between; cursor: pointer; }
     .zs-faq-answer { padding: 0 20px 20px; font-size: 14px; color: var(--zs-text-2); display: none; }
     .zs-faq-item.active .zs-faq-answer { display: block; }
 
-    /* ===== CONTACT ===== */
     .zs-contact-card { max-width: 500px; margin: 0 auto; background: var(--zs-glass); border: 1px solid var(--zs-border); border-radius: 20px; padding: 48px; text-align: center; }
     .zs-contact-card p { font-size: 18px; color: var(--zs-text-2); margin-bottom: 24px; }
 
-    /* ===== MODAL & DRAWER STYLES ===== */
+    /* MODAL & DRAWER STYLES */
     .zs-modal-overlay {
       position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85);
       backdrop-filter: blur(8px); z-index: 999; display: none;
@@ -349,11 +374,14 @@
     .zs-cart-footer { border-top: 1px solid var(--zs-border); padding-top: 20px; margin-top: 20px; }
     .zs-cart-total { display: flex; justify-content: space-between; font-size: 18px; font-weight: 700; margin-bottom: 20px; }
 
-    /* ===== FOOTER ===== */
+    /* ADMIN & USER PANEL STYLES */
+    .admin-card { background: rgba(239, 68, 68, 0.05); border: 1px solid #ef4444; border-radius: 16px; padding: 24px; margin-bottom: 24px; }
+    .admin-title { color: #ef4444; font-size: 20px; font-weight: 700; margin-bottom: 16px; }
+    .order-item-card { background: var(--zs-glass); border: 1px solid var(--zs-border); border-radius: 10px; padding: 14px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+
+    /* FOOTER & FLOATING */
     .zs-footer { text-align: center; padding: 24px; border-top: 1px solid var(--zs-border); color: var(--zs-text-2); font-size: 14px; margin-top: auto; }
     .zs-footer-credit { color: var(--zs-cyan); font-weight: 600; margin-top: 4px; }
-
-    /* ===== FLOATING WHATSAPP ===== */
     .zs-float {
       position: fixed; bottom: 24px; right: 24px; width: 60px; height: 60px; border-radius: 50%;
       background: #25d366; z-index: 90; display: flex; align-items: center; justify-content: center;
@@ -361,15 +389,15 @@
     }
     .zs-float svg { width: 32px; height: 32px; fill: white; }
 
-    /* ===== MOBILE ===== */
+    /* MOBILE */
     @media (max-width: 768px) {
       .zs-nav-links {
         position: absolute; top: 64px; left: 0; right: 0; background: rgba(3, 3, 8, 0.98);
-        flex-direction: column; padding: 24px; gap: 20px; border-bottom: 1px solid var(--zs-border); display: none;
+        flex-direction: column; padding: 24px; gap: 16px; border-bottom: 1px solid var(--zs-border); display: none;
       }
       .zs-nav-links.open { display: flex; }
       .zs-nav-toggle { display: block; }
-      .zs-hero-title { font-size: 32px; }
+      .zs-hero-title { font-size: 30px; }
       .zs-grid-3, .zs-reviews-grid { grid-template-columns: 1fr; }
     }
   </style>
@@ -417,6 +445,14 @@
         <li><a onclick="navigateTo('reviews')" class="nav-item" id="nav-reviews">Reviews</a></li>
         <li><a onclick="navigateTo('faq')" class="nav-item" id="nav-faq">FAQ</a></li>
         <li><a onclick="navigateTo('contact')" class="nav-item" id="nav-contact">Contact</a></li>
+        <li id="adminNavLi" style="display: none;">
+          <button class="zs-admin-nav-btn" onclick="navigateTo('admin')">🛠️ Admin Panel</button>
+        </li>
+        <li>
+          <button class="zs-wallet-btn" onclick="openWalletModal()">
+            💰 Wallet: <span id="navWalletBalance">Rs. 0</span>
+          </button>
+        </li>
         <li>
           <button class="zs-cart-btn" onclick="toggleCart()">
             🛒 Cart <span class="zs-cart-badge" id="cartCount">0</span>
@@ -450,10 +486,11 @@
         </div>
         <h1 class="zs-hero-title">Welcome to Zephyr Store</h1>
         <p class="zs-hero-subtitle">Sri Lanka's Trusted Gaming Store</p>
+        
+        <!-- EXPLORE SERVICES BUTTON -->
+        <button class="zs-explore-btn" onclick="navigateTo('store')">🚀 Explore Services</button>
+
         <div class="zs-creator-tag">Created by Admin Chamath</div>
-        <div>
-          <button onclick="navigateTo('store')" class="zs-btn zs-btn-primary">Explore Services</button>
-        </div>
       </div>
     </section>
 
@@ -461,9 +498,9 @@
     <section class="zs-page" id="page-store">
       <h2 class="zs-section-title">Our Services</h2>
       <div class="zs-tabs">
-        <button class="zs-tab-btn active" data-tab="diamonds">💎 Diamond Prices</button>
-        <button class="zs-tab-btn" data-tab="editing">🎨 Editing Services</button>
-        <button class="zs-tab-btn" data-tab="tournaments">🏆 Tournaments</button>
+        <button class="zs-tab-btn active" data-tab="diamonds" id="tab-btn-diamonds">💎 Diamond Prices</button>
+        <button class="zs-tab-btn" data-tab="editing" id="tab-btn-editing">🎨 Editing Services</button>
+        <button class="zs-tab-btn" data-tab="tournaments" id="tab-btn-tournaments">🏆 Tournaments</button>
       </div>
 
       <!-- TAB 1: DIAMONDS -->
@@ -474,7 +511,7 @@
             <div>
               <div class="zs-price">Rs. 190</div>
               <div class="zs-card-actions">
-                <button class="zs-card-btn-buy" onclick="orderWhatsApp('Weekly Lite', '190')">Buy Now</button>
+                <button class="zs-card-btn-buy" onclick="initiatePurchase('Weekly Lite', 190)">Buy Now</button>
                 <button class="zs-card-btn-cart" onclick="addToCart('Weekly Lite', 190)">+ Cart</button>
               </div>
             </div>
@@ -485,7 +522,7 @@
             <div>
               <div class="zs-price">Rs. 630</div>
               <div class="zs-card-actions">
-                <button class="zs-card-btn-buy" onclick="orderWhatsApp('Weekly', '630')">Buy Now</button>
+                <button class="zs-card-btn-buy" onclick="initiatePurchase('Weekly', 630)">Buy Now</button>
                 <button class="zs-card-btn-cart" onclick="addToCart('Weekly', 630)">+ Cart</button>
               </div>
             </div>
@@ -496,7 +533,7 @@
             <div>
               <div class="zs-price">Rs. 2,980</div>
               <div class="zs-card-actions">
-                <button class="zs-card-btn-buy" onclick="orderWhatsApp('Monthly', '2980')">Buy Now</button>
+                <button class="zs-card-btn-buy" onclick="initiatePurchase('Monthly', 2980)">Buy Now</button>
                 <button class="zs-card-btn-cart" onclick="addToCart('Monthly', 2980)">+ Cart</button>
               </div>
             </div>
@@ -512,7 +549,7 @@
             <div>
               <div class="zs-price">Rs. 250</div>
               <div class="zs-card-actions">
-                <button class="zs-card-btn-buy" onclick="orderWhatsApp('Photo Editing', '250')">Buy Now</button>
+                <button class="zs-card-btn-buy" onclick="initiatePurchase('Photo Editing', 250)">Buy Now</button>
                 <button class="zs-card-btn-cart" onclick="addToCart('Photo Editing', 250)">+ Cart</button>
               </div>
             </div>
@@ -523,7 +560,7 @@
             <div>
               <div class="zs-price">Rs. 350</div>
               <div class="zs-card-actions">
-                <button class="zs-card-btn-buy" onclick="orderWhatsApp('Gaming Poster', '350')">Buy Now</button>
+                <button class="zs-card-btn-buy" onclick="initiatePurchase('Gaming Poster', 350)">Buy Now</button>
                 <button class="zs-card-btn-cart" onclick="addToCart('Gaming Poster', 350)">+ Cart</button>
               </div>
             </div>
@@ -533,7 +570,7 @@
             <div>
               <div class="zs-price">Rs. 300</div>
               <div class="zs-card-actions">
-                <button class="zs-card-btn-buy" onclick="orderWhatsApp('Thumbnail Design', '300')">Buy Now</button>
+                <button class="zs-card-btn-buy" onclick="initiatePurchase('Thumbnail Design', 300)">Buy Now</button>
                 <button class="zs-card-btn-cart" onclick="addToCart('Thumbnail Design', 300)">+ Cart</button>
               </div>
             </div>
@@ -543,7 +580,7 @@
             <div>
               <div class="zs-price">Rs. 250</div>
               <div class="zs-card-actions">
-                <button class="zs-card-btn-buy" onclick="orderWhatsApp('Social Media Post', '250')">Buy Now</button>
+                <button class="zs-card-btn-buy" onclick="initiatePurchase('Social Media Post', 250)">Buy Now</button>
                 <button class="zs-card-btn-cart" onclick="addToCart('Social Media Post', 250)">+ Cart</button>
               </div>
             </div>
@@ -554,7 +591,7 @@
             <div>
               <div class="zs-price">Rs. 350</div>
               <div class="zs-card-actions">
-                <button class="zs-card-btn-buy" onclick="orderWhatsApp('Logo Design', '350')">Buy Now</button>
+                <button class="zs-card-btn-buy" onclick="initiatePurchase('Logo Design', 350)">Buy Now</button>
                 <button class="zs-card-btn-cart" onclick="addToCart('Logo Design', 350)">+ Cart</button>
               </div>
             </div>
@@ -564,7 +601,7 @@
             <div>
               <div class="zs-price">Rs. 400</div>
               <div class="zs-card-actions">
-                <button class="zs-card-btn-buy" onclick="orderWhatsApp('Video Editing', '400')">Buy Now</button>
+                <button class="zs-card-btn-buy" onclick="initiatePurchase('Video Editing', 400)">Buy Now</button>
                 <button class="zs-card-btn-cart" onclick="addToCart('Video Editing', 400)">+ Cart</button>
               </div>
             </div>
@@ -646,7 +683,7 @@
         </div>
         <div class="zs-faq-item">
           <button class="zs-faq-question"><span>What payment methods do you accept?</span> <span>▼</span></button>
-          <div class="zs-faq-answer">We accept Online Bank Transfers (BOC, Commercial Bank, Sampath, EzCash, etc.).</div>
+          <div class="zs-faq-answer">We accept Online Bank Transfers (BOC, Commercial Bank, Sampath, EzCash, etc.) or Zephyr Store Wallet!</div>
         </div>
         <div class="zs-faq-item">
           <button class="zs-faq-question"><span>Is Zephyr Store 100% Safe & Legitimate?</span> <span>▼</span></button>
@@ -672,25 +709,123 @@
       </div>
     </section>
 
+    <!-- PAGE 6: ADMIN PANEL (HIDDEN FOR PUBLIC) -->
+    <section class="zs-page" id="page-admin">
+      <h2 class="zs-section-title" style="color: #ef4444;">Admin Dashboard</h2>
+      
+      <!-- CREATE REDEEM CODES -->
+      <div class="admin-card">
+        <div class="admin-title">🎫 Create Redeem Code</div>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <input type="text" id="adminCodeInput" class="zs-form-input" placeholder="Code (e.g. ABC123)" style="flex:1; min-width: 150px;">
+          <input type="number" id="adminAmountInput" class="zs-form-input" placeholder="Amount (LKR)" style="flex:1; min-width: 150px;">
+          <button class="zs-btn zs-btn-primary" onclick="adminCreateCode()">Generate Code</button>
+        </div>
+      </div>
+
+      <!-- ORDERS APPROVAL LIST -->
+      <div class="admin-card">
+        <div class="admin-title">🔔 Orders Pending Approval</div>
+        <div id="adminOrdersContainer">
+          <p style="color: var(--zs-text-2);">Loading pending orders...</p>
+        </div>
+      </div>
+
+      <div class="zs-back-btn-wrapper">
+        <button class="zs-back-btn" onclick="navigateTo('home')">← Back to Home</button>
+      </div>
+    </section>
+
   </div>
 
-  <!-- SIGN UP MODAL -->
+  <!-- SIGN UP / LOGIN MODAL -->
   <div class="zs-modal-overlay" id="authModal">
     <div class="zs-modal">
       <div class="zs-modal-close" onclick="closeAuthModal()">×</div>
-      <h3>User Sign Up</h3>
-      <p>Enter your details to create your store account profile.</p>
+      <h3>User Sign Up / Login</h3>
+      <p>Enter your details to sync your balance permanently across devices.</p>
       <form onsubmit="handleSignUp(event)">
         <div class="zs-form-group">
-          <label>Your Username / Gaming Name</label>
-          <input type="text" id="signUpName" class="zs-form-input" placeholder="e.g. Chama_FF" required>
+          <label>Your Name / Gaming Name</label>
+          <input type="text" id="signUpName" class="zs-form-input" placeholder="e.g. CHAMA_FF" required>
         </div>
         <div class="zs-form-group">
-          <label>WhatsApp Phone Number</label>
-          <input type="tel" id="signUpPhone" class="zs-form-input" placeholder="e.g. 0771234567" required>
+          <label>WhatsApp Phone Number (Unique Key)</label>
+          <input type="tel" id="signUpPhone" class="zs-form-input" placeholder="e.g. 0742605032" required>
         </div>
-        <button type="submit" class="zs-btn zs-btn-primary" style="width: 100%; margin-top: 10px;">Save Profile</button>
+        <button type="submit" class="zs-btn zs-btn-primary" style="width: 100%; margin-top: 10px;">Login / Register Profile</button>
       </form>
+    </div>
+  </div>
+
+  <!-- WALLET MODAL -->
+  <div class="zs-modal-overlay" id="walletModal">
+    <div class="zs-modal">
+      <div class="zs-modal-close" onclick="closeWalletModal()">×</div>
+      <h3>💰 Your Wallet</h3>
+      <div style="background: rgba(0, 212, 255, 0.1); border: 1px solid var(--zs-cyan); border-radius: 12px; padding: 16px; text-align: center; margin-bottom: 20px;">
+        <span style="font-size: 13px; color: var(--zs-text-2);">Current Balance</span>
+        <h2 style="color: var(--zs-cyan); font-size: 32px;" id="modalWalletBalance">Rs. 0</h2>
+      </div>
+
+      <div class="zs-form-group">
+        <label>Redeem Gift / Wallet Code</label>
+        <div style="display: flex; gap: 8px;">
+          <input type="text" id="redeemCodeInput" class="zs-form-input" placeholder="Enter Code (e.g. ABC123)" style="margin: 0;">
+          <button class="zs-btn zs-btn-primary" onclick="redeemCode()">Redeem</button>
+        </div>
+      </div>
+
+      <div style="border-top: 1px solid var(--zs-border); margin-top: 20px; padding-top: 16px; text-align: center;">
+        <p style="font-size: 13px; margin-bottom: 12px;">Salli danna Admin ta WhatsApp ekata receipt eka yawන්න:</p>
+        <button class="zs-btn zs-btn-secondary" style="width: 100%;" onclick="requestAddMoney()">📲 Add Money via WhatsApp</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAYMENT CHOICE MODAL FOR SINGLE PURCHASES -->
+  <div class="zs-modal-overlay" id="paymentChoiceModal">
+    <div class="zs-modal">
+      <div class="zs-modal-close" onclick="closePaymentModal()">×</div>
+      <h3>Select Payment Method</h3>
+      <p id="purchaseItemTitle" style="color: var(--zs-cyan); font-weight: bold;"></p>
+      
+      <div class="zs-form-group">
+        <label>Free Fire UID / Details</label>
+        <input type="text" id="checkoutUidInput" class="zs-form-input" placeholder="Enter FF UID or Details">
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
+        <button class="zs-btn zs-btn-primary" onclick="processWalletPay()">
+          💰 Pay via Wallet (Balance: <span id="payModalWalletBal">Rs. 0</span>)
+        </button>
+        <button class="zs-btn zs-btn-secondary" onclick="processWhatsAppPay()">
+          📱 Direct WhatsApp Order
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CART PAYMENT MODAL -->
+  <div class="zs-modal-overlay" id="cartPaymentModal">
+    <div class="zs-modal">
+      <div class="zs-modal-close" onclick="closeCartPaymentModal()">×</div>
+      <h3>Cart Checkout</h3>
+      <p id="cartModalTotalTitle" style="color: var(--zs-cyan); font-weight: bold; font-size: 16px;"></p>
+      
+      <div class="zs-form-group">
+        <label>Free Fire UID / Order Details</label>
+        <input type="text" id="cartCheckoutUidInput" class="zs-form-input" placeholder="Enter FF UID or Note">
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
+        <button class="zs-btn zs-btn-primary" onclick="processCartWalletPay()">
+          💰 Pay Cart via Wallet (Balance: <span id="cartModalWalletBal">Rs. 0</span>)
+        </button>
+        <button class="zs-btn zs-btn-secondary" onclick="processCartWhatsAppPay()">
+          📱 Order Cart via WhatsApp
+        </button>
+      </div>
     </div>
   </div>
 
@@ -708,7 +843,7 @@
         <span>Total:</span>
         <span id="cartTotal">Rs. 0</span>
       </div>
-      <button class="zs-btn zs-btn-primary" style="width: 100%;" onclick="checkoutCart()">Checkout via WhatsApp</button>
+      <button class="zs-btn zs-btn-primary" style="width: 100%;" onclick="checkoutCart()">Checkout Order</button>
     </div>
   </div>
 
@@ -724,14 +859,254 @@
   </a>
 
   <script>
+    // FIREBASE INITIALIZATION
+    const firebaseConfig = {
+      apiKey: "AIzaSyBpCinA9MwA5ZhZxkSjThTQJH242AnerI8",
+      authDomain: "zephyr-store-4c8a0.firebaseapp.com",
+      databaseURL: "https://zephyr-store-4c8a0-default-rtdb.firebaseio.com",
+      projectId: "zephyr-store-4c8a0",
+      storageBucket: "zephyr-store-4c8a0.firebasestorage.app",
+      messagingSenderId: "565643681478",
+      appId: "1:565643681478:web:edffcea80f1a9b4d9e41c7",
+      measurementId: "G-03SRZW1JQ4"
+    };
+    
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+
     var autoHomeTimer;
     var cart = [];
     var currentUser = JSON.parse(localStorage.getItem('zephyrUser')) || null;
-    
-    // TOURNAMENT SYSTEM LOGIC
+    var currentWalletBalance = 0;
+    var selectedPurchase = null;
+
     var currentRegisteredSlots = parseInt(localStorage.getItem('tourneySlots')) || 0;
     var maxSlots = 16;
+    var storePhone = "94742605032";
 
+    // INITIALIZE USER & WALLET SYNC
+    function initUserUI() {
+      var userBtn = document.getElementById('userBtn');
+      var adminLi = document.getElementById('adminNavLi');
+
+      if (currentUser && currentUser.phone) {
+        userBtn.innerHTML = '👤 ' + currentUser.name;
+        
+        // ADMIN CHECK (Phone 0742605032)
+        if (currentUser.phone.includes("0742605032") || currentUser.phone.includes("742605032")) {
+          adminLi.style.display = 'inline-block';
+          loadAdminOrders();
+        } else {
+          adminLi.style.display = 'none';
+        }
+
+        // LISTEN TO REALTIME WALLET BALANCE
+        database.ref('users/' + currentUser.phone + '/balance').on('value', function(snapshot) {
+          currentWalletBalance = snapshot.val() || 0;
+          document.getElementById('navWalletBalance').innerText = 'Rs. ' + currentWalletBalance;
+          document.getElementById('modalWalletBalance').innerText = 'Rs. ' + currentWalletBalance;
+          document.getElementById('payModalWalletBal').innerText = 'Rs. ' + currentWalletBalance;
+          document.getElementById('cartModalWalletBal').innerText = 'Rs. ' + currentWalletBalance;
+        });
+
+      } else {
+        userBtn.innerHTML = '👤 Sign Up';
+        adminLi.style.display = 'none';
+        document.getElementById('navWalletBalance').innerText = 'Rs. 0';
+      }
+    }
+
+    // AUTH MODAL
+    function openAuthModal() {
+      document.getElementById('authModal').classList.add('active');
+      if(currentUser) {
+        document.getElementById('signUpName').value = currentUser.name || '';
+        document.getElementById('signUpPhone').value = currentUser.phone || '';
+      }
+    }
+
+    function closeAuthModal() {
+      document.getElementById('authModal').classList.remove('active');
+    }
+
+    function handleSignUp(e) {
+      e.preventDefault();
+      var name = document.getElementById('signUpName').value.trim();
+      var phone = document.getElementById('signUpPhone').value.trim().replace(/\D/g, '');
+
+      if(name && phone) {
+        currentUser = { name: name, phone: phone };
+        localStorage.setItem('zephyrUser', JSON.stringify(currentUser));
+        
+        // Ensure User Record Exists in Firebase
+        database.ref('users/' + phone).once('value', function(snap) {
+          if(!snap.exists()) {
+            database.ref('users/' + phone).set({ name: name, phone: phone, balance: 0 });
+          }
+          initUserUI();
+          closeAuthModal();
+          alert('Welcome ' + name + '! Profile synchronized.');
+        });
+      }
+    }
+
+    // WALLET MODAL & REDEEM CODES
+    function openWalletModal() {
+      if(!currentUser) {
+        alert('කරුණාකර පළමුව Sign Up / Login වන්න!');
+        openAuthModal();
+        return;
+      }
+      document.getElementById('walletModal').classList.add('active');
+    }
+
+    function closeWalletModal() {
+      document.getElementById('walletModal').classList.remove('active');
+    }
+
+    function requestAddMoney() {
+      var msg = "Hi Admin, I want to add money to my Zephyr Wallet.\nUser: " + currentUser.name + "\nPhone: " + currentUser.phone;
+      window.open("https://wa.me/" + storePhone + "?text=" + encodeURIComponent(msg), '_blank');
+    }
+
+    function redeemCode() {
+      var code = document.getElementById('redeemCodeInput').value.trim().toUpperCase();
+      if(!code) return alert('කරුණාකර Redeem Code එක ඇතුළත් කරන්න!');
+
+      database.ref('redeemCodes/' + code).once('value', function(snapshot) {
+        if(!snapshot.exists()) {
+          alert('❌ වැරදි හෝ නැති Code එකකි!');
+          return;
+        }
+
+        var data = snapshot.val();
+        if(data.used) {
+          alert('⚠️ මෙම Code එක කලින් භාවිතා කර ඇත!');
+          return;
+        }
+
+        var addedAmount = parseFloat(data.amount);
+        var newBalance = currentWalletBalance + addedAmount;
+
+        // Update Balance & Mark Code Used
+        database.ref('users/' + currentUser.phone).update({ balance: newBalance });
+        database.ref('redeemCodes/' + code).update({ used: true, usedBy: currentUser.phone });
+
+        alert('🎉 සාර්ථකයි! Rs. ' + addedAmount + ' ක් ඔබගේ Wallet එකට එකතු විය.');
+        document.getElementById('redeemCodeInput').value = '';
+      });
+    }
+
+    // PURCHASES & WALLET DEDUCTION
+    function initiatePurchase(itemName, itemPrice) {
+      if(!currentUser) {
+        alert('කරුණාකර පළමුව Sign Up / Login වන්න!');
+        openAuthModal();
+        return;
+      }
+      selectedPurchase = { name: itemName, price: parseFloat(itemPrice) };
+      document.getElementById('purchaseItemTitle').innerText = itemName + " — Rs. " + itemPrice;
+      document.getElementById('paymentChoiceModal').classList.add('active');
+    }
+
+    function closePaymentModal() {
+      document.getElementById('paymentChoiceModal').classList.remove('active');
+    }
+
+    function processWalletPay() {
+      var uid = document.getElementById('checkoutUidInput').value.trim();
+      if(!uid) return alert('කරුණාකර FF UID හෝ විස්තර ඇතුළත් කරන්න!');
+
+      if(currentWalletBalance < selectedPurchase.price) {
+        alert('❌ Wallet Balance එක මදියි! සල්ලි එකතු කිරීමට Wallet එකට යන්න.');
+        return;
+      }
+
+      var newBalance = currentWalletBalance - selectedPurchase.price;
+      
+      // Deduct Balance
+      database.ref('users/' + currentUser.phone).update({ balance: newBalance });
+
+      // Create Pending Order in Firebase for Admin Approval
+      var orderId = 'ORD_' + Date.now();
+      database.ref('orders/' + orderId).set({
+        user: currentUser.name,
+        phone: currentUser.phone,
+        uid: uid,
+        item: selectedPurchase.name,
+        price: selectedPurchase.price,
+        status: 'Pending',
+        timestamp: Date.now()
+      });
+
+      alert('✅ Order එක සාර්ථකයි! Admin පරීක්ෂා කර සේවාව සක්‍රීය කරනු ඇත.');
+      closePaymentModal();
+    }
+
+    function processWhatsAppPay() {
+      var uid = document.getElementById('checkoutUidInput').value.trim();
+      var msg = "Hi, I want to order " + selectedPurchase.name + " - Rs. " + selectedPurchase.price + "\nUID/Details: " + uid + "\nUser: " + currentUser.name + " (" + currentUser.phone + ")";
+      window.open("https://wa.me/" + storePhone + "?text=" + encodeURIComponent(msg), '_blank');
+      closePaymentModal();
+    }
+
+    // ADMIN FUNCTIONS
+    function adminCreateCode() {
+      var code = document.getElementById('adminCodeInput').value.trim().toUpperCase();
+      var amount = parseFloat(document.getElementById('adminAmountInput').value);
+
+      if(!code || isNaN(amount)) return alert('Code එක සහ Amount එක නිවැරදිව ලබාදෙන්න!');
+
+      database.ref('redeemCodes/' + code).set({
+        amount: amount,
+        used: false
+      }, function(err) {
+        if(!err) {
+          alert('✅ Code Created: ' + code + ' (Rs. ' + amount + ')');
+          document.getElementById('adminCodeInput').value = '';
+          document.getElementById('adminAmountInput').value = '';
+        }
+      });
+    }
+
+    function loadAdminOrders() {
+      database.ref('orders').on('value', function(snapshot) {
+        var container = document.getElementById('adminOrdersContainer');
+        container.innerHTML = '';
+
+        if(!snapshot.exists()) {
+          container.innerHTML = '<p style="color: var(--zs-text-2);">No pending orders.</p>';
+          return;
+        }
+
+        snapshot.forEach(function(child) {
+          var order = child.val();
+          var key = child.key;
+
+          var div = document.createElement('div');
+          div.className = 'order-item-card';
+          div.innerHTML = `
+            <div>
+              <div style="font-weight: bold; color: var(--zs-cyan);">${order.item} - Rs. ${order.price}</div>
+              <div style="font-size: 12px; color: var(--zs-text-2);">User: ${order.user} (${order.phone}) | UID: ${order.uid}</div>
+              <div style="font-size: 11px; color: #ff0055;">Status: ${order.status}</div>
+            </div>
+            <div>
+              ${order.status === 'Pending' ? `<button class="zs-btn zs-btn-primary" style="padding: 6px 12px; font-size: 11px;" onclick="approveOrder('${key}')">Approve</button>` : `<span style="color: #00ff88;">Completed</span>`}
+            </div>
+          `;
+          container.appendChild(div);
+        });
+      });
+    }
+
+    function approveOrder(orderKey) {
+      database.ref('orders/' + orderKey).update({ status: 'Completed' }, function(err) {
+        if(!err) alert('Order Marked as Completed!');
+      });
+    }
+
+    // TOURNAMENT LOGIC
     function updateSlotUI() {
       var slotDisplay = document.getElementById('slotDisplay');
       var submitBtn = document.getElementById('tourneySubmitBtn');
@@ -777,44 +1152,10 @@
                     "✅ Payment verify කළාම slot එක confirm කිරීම\n" +
                     "📲 Waiting for WhatsApp confirmation";
 
-      var phone = "94742605032";
-      window.open("https://wa.me/" + phone + "?text=" + encodeURIComponent(message), '_blank');
+      window.open("https://wa.me/" + storePhone + "?text=" + encodeURIComponent(message), '_blank');
     }
 
-    function initUserUI() {
-      var userBtn = document.getElementById('userBtn');
-      if (currentUser && currentUser.name) {
-        userBtn.innerHTML = '👤 ' + currentUser.name;
-      } else {
-        userBtn.innerHTML = '👤 Sign Up';
-      }
-    }
-
-    function openAuthModal() {
-      document.getElementById('authModal').classList.add('active');
-      if(currentUser) {
-        document.getElementById('signUpName').value = currentUser.name || '';
-        document.getElementById('signUpPhone').value = currentUser.phone || '';
-      }
-    }
-
-    function closeAuthModal() {
-      document.getElementById('authModal').classList.remove('active');
-    }
-
-    function handleSignUp(e) {
-      e.preventDefault();
-      var name = document.getElementById('signUpName').value.trim();
-      var phone = document.getElementById('signUpPhone').value.trim();
-      if(name && phone) {
-        currentUser = { name: name, phone: phone };
-        localStorage.setItem('zephyrUser', JSON.stringify(currentUser));
-        initUserUI();
-        closeAuthModal();
-        alert('Welcome ' + name + '! Profile updated successfully.');
-      }
-    }
-
+    // CART DRAWER & CART PAYMENT MODAL LOGIC
     function toggleCart() {
       document.getElementById('cartDrawer').classList.toggle('active');
     }
@@ -856,27 +1197,73 @@
         alert('Cart එක හිස්ව පවතී.');
         return;
       }
-      var phone = "94742605032";
+      if(!currentUser) {
+        alert('කරුණාකර පළමුව Sign Up / Login වන්න!');
+        openAuthModal();
+        return;
+      }
+
+      var total = cart.reduce(function(acc, i) { return acc + i.price; }, 0);
+      document.getElementById('cartModalTotalTitle').innerText = "Cart Total: Rs. " + total + " (" + cart.length + " items)";
+      document.getElementById('cartPaymentModal').classList.add('active');
+    }
+
+    function closeCartPaymentModal() {
+      document.getElementById('cartPaymentModal').classList.remove('active');
+    }
+
+    function processCartWalletPay() {
+      var uid = document.getElementById('cartCheckoutUidInput').value.trim();
+      if(!uid) return alert('කරුණාකර FF UID හෝ අවශ්‍ය විස්තර ලබාදෙන්න!');
+
+      var total = cart.reduce(function(acc, i) { return acc + i.price; }, 0);
+
+      if(currentWalletBalance < total) {
+        alert('❌ Wallet Balance එක මදියි! සල්ලි එකතු කිරීමට Wallet එකට යන්න.');
+        return;
+      }
+
+      var newBalance = currentWalletBalance - total;
+      var itemsList = cart.map(function(i) { return i.name; }).join(", ");
+
+      // Deduct Wallet Balance
+      database.ref('users/' + currentUser.phone).update({ balance: newBalance });
+
+      // Save Order to Firebase
+      var orderId = 'ORD_CART_' + Date.now();
+      database.ref('orders/' + orderId).set({
+        user: currentUser.name,
+        phone: currentUser.phone,
+        uid: uid,
+        item: "CART: " + itemsList,
+        price: total,
+        status: 'Pending',
+        timestamp: Date.now()
+      });
+
+      alert('✅ Cart Order එක සාර්ථකයි! Wallet එකෙන් Rs. ' + total + ' කැපුනා. Admin පරීක්ෂා කර ලබාදෙනු ඇත.');
+      
+      cart = [];
+      updateCartUI();
+      closeCartPaymentModal();
+      toggleCart();
+    }
+
+    function processCartWhatsAppPay() {
+      var uid = document.getElementById('cartCheckoutUidInput').value.trim();
       var itemsList = cart.map(function(i) { return i.name + " (Rs. " + i.price + ")"; }).join(", ");
       var total = cart.reduce(function(acc, i) { return acc + i.price; }, 0);
       
-      var message = "Hi, I want to order the following items:\n" + itemsList + "\n\nTotal: Rs. " + total;
+      var message = "Hi, I want to order the following Cart items:\n" + itemsList + "\n\nTotal: Rs. " + total + "\nFF UID / Details: " + uid;
       if (currentUser && currentUser.name) {
         message += "\n\nUser Profile:\nName: " + currentUser.name + "\nPhone: " + currentUser.phone;
       }
       
-      window.open("https://wa.me/" + phone + "?text=" + encodeURIComponent(message), '_blank');
+      window.open("https://wa.me/" + storePhone + "?text=" + encodeURIComponent(message), '_blank');
+      closeCartPaymentModal();
     }
 
-    function orderWhatsApp(itemName, itemPrice) {
-      var phone = "94742605032";
-      var message = "Hi, I want " + itemName + " - Rs. " + itemPrice;
-      if (currentUser && currentUser.name) {
-        message += "\n\nUser Profile:\nName: " + currentUser.name + "\nPhone: " + currentUser.phone;
-      }
-      window.open("https://wa.me/" + phone + "?text=" + encodeURIComponent(message), '_blank');
-    }
-
+    // NAVIGATION
     function navigateTo(pageId) {
       document.querySelectorAll('.zs-page').forEach(function(p) { p.classList.remove('active-page'); });
       document.querySelectorAll('.nav-item').forEach(function(n) { n.classList.remove('active'); });
@@ -894,7 +1281,7 @@
 
     function resetAutoHomeTimer(currentPage) {
       clearTimeout(autoHomeTimer);
-      if (currentPage !== 'home') {
+      if (currentPage !== 'home' && currentPage !== 'admin') {
         autoHomeTimer = setTimeout(function() { navigateTo('home'); }, 30000);
       }
     }
@@ -908,6 +1295,7 @@
       });
     });
 
+    // PAGE LOAD INITS
     (function() {
       window.addEventListener('load', function() {
         initUserUI();
