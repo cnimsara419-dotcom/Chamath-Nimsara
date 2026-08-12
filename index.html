@@ -96,8 +96,8 @@
       margin-right: 40px;
     }
     .zs-ticker-dot {
-      width: 8px; height: 8px; background: #00ff88; border-radius: 50%;
-      box-shadow: 0 0 8px #00ff88;
+      width: 8px; height: 8px; background: #ff0055; border-radius: 50%;
+      box-shadow: 0 0 8px #ff0055;
     }
     @keyframes zs-scroll {
       0% { transform: translateX(0); }
@@ -186,9 +186,9 @@
     .zs-hero-title {
       font-size: 42px; font-weight: 800; margin-bottom: 12px;
       text-transform: uppercase; letter-spacing: 4px;
-      background: linear-gradient(135deg, #ffffff 20%, #00d4ff 60%, #0088ff 100%);
+      background: linear-gradient(135deg, #ffffff 20%, #ff0055 60%, #ff5500 100%);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      filter: drop-shadow(0 0 20px var(--zs-cyan-glow));
+      filter: drop-shadow(0 0 20px rgba(255, 0, 85, 0.4));
     }
     .zs-hero-subtitle { font-size: 18px; color: var(--zs-text-2); margin-bottom: 24px; letter-spacing: 2px; }
     
@@ -376,8 +376,8 @@
 
     /* ADMIN & USER PANEL STYLES */
     .admin-card { background: rgba(239, 68, 68, 0.05); border: 1px solid #ef4444; border-radius: 16px; padding: 24px; margin-bottom: 24px; }
-    .admin-title { color: #ef4444; font-size: 20px; font-weight: 700; margin-bottom: 16px; }
-    .order-item-card { background: var(--zs-glass); border: 1px solid var(--zs-border); border-radius: 10px; padding: 14px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+    .admin-title { color: #ef4444; font-size: 20px; font-weight: 700; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center; }
+    .order-item-card, .user-item-card { background: var(--zs-glass); border: 1px solid var(--zs-border); border-radius: 10px; padding: 14px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
 
     /* FOOTER & FLOATING */
     .zs-footer { text-align: center; padding: 24px; border-top: 1px solid var(--zs-border); color: var(--zs-text-2); font-size: 14px; margin-top: auto; }
@@ -416,10 +416,8 @@
   <!-- LIVE PROOF TICKER -->
   <div class="zs-ticker">
     <div class="zs-ticker-content">
-      <span class="zs-ticker-item"><span class="zs-ticker-dot"></span> Kavi_FF completed Weekly Pass Order! (2 mins ago)</span>
-      <span class="zs-ticker-item"><span class="zs-ticker-dot"></span> Admin Chamath created Gaming Logo for User_X (15 mins ago)</span>
-      <span class="zs-ticker-item"><span class="zs-ticker-dot"></span> Sahan_SL bought Monthly Membership! (30 mins ago)</span>
-      <span class="zs-ticker-item"><span class="zs-ticker-dot"></span> Dynamic_YT completed Video Edit Order! (1 hr ago)</span>
+      <span class="zs-ticker-item"><span class="zs-ticker-dot"></span> ⚠️ Notice: Zephyr Store is currently CLOSED for maintenance. We will be back soon!</span>
+      <span class="zs-ticker-item"><span class="zs-ticker-dot"></span> ⚠️ Notice: Website is under system updates. Please check back later.</span>
     </div>
   </div>
 
@@ -484,11 +482,11 @@
             </defs>
           </svg>
         </div>
-        <h1 class="zs-hero-title">Welcome to Zephyr Store</h1>
-        <p class="zs-hero-subtitle">Sri Lanka's Trusted Gaming Store</p>
+        <h1 class="zs-hero-title">WEBSITE TEMPORARILY CLOSED</h1>
+        <p class="zs-hero-subtitle">We are currently undergoing system updates. We will be back online soon!</p>
         
-        <!-- EXPLORE SERVICES BUTTON -->
-        <button class="zs-explore-btn" onclick="navigateTo('store')">🚀 Explore Services</button>
+        <!-- CLOSED NOTICE BUTTON -->
+        <button class="zs-explore-btn" style="background: linear-gradient(135deg, #ff0055, #ff5500); color: #fff; box-shadow: 0 0 25px rgba(255,0,85,0.4);" onclick="alert('⚠️ Website is currently closed for maintenance!')">🔒 STORE CLOSED</button>
 
         <div class="zs-creator-tag">Created by Admin Chamath</div>
       </div>
@@ -709,10 +707,21 @@
       </div>
     </section>
 
-    <!-- PAGE 6: ADMIN PANEL (HIDDEN FOR PUBLIC) -->
+    <!-- PAGE 6: ADMIN PANEL (MANAGEMENT DASHBOARD) -->
     <section class="zs-page" id="page-admin">
-      <h2 class="zs-section-title" style="color: #ef4444;">Admin Dashboard</h2>
+      <h2 class="zs-section-title" style="color: #ef4444;">Admin Control Center</h2>
       
+      <!-- ALL REGISTERED USERS MANAGEMENT -->
+      <div class="admin-card">
+        <div class="admin-title">
+          <span>👥 Registered Users List</span>
+          <span id="adminTotalUsersBadge" style="font-size: 13px; color: var(--zs-cyan); font-weight: normal;">Total: 0</span>
+        </div>
+        <div id="adminUsersContainer">
+          <p style="color: var(--zs-text-2);">Loading registered users list...</p>
+        </div>
+      </div>
+
       <!-- CREATE REDEEM CODES -->
       <div class="admin-card">
         <div class="admin-title">🎫 Create Redeem Code</div>
@@ -895,12 +904,12 @@
         // ADMIN CHECK (Phone 0742605032)
         if (currentUser.phone.includes("0742605032") || currentUser.phone.includes("742605032")) {
           adminLi.style.display = 'inline-block';
-          loadAdminOrders();
+          loadAdminData();
         } else {
           adminLi.style.display = 'none';
         }
 
-        // LISTEN TO REALTIME WALLET BALANCE
+        // LISTEN TO REALTIME WALLET BALANCE FROM FIREBASE
         database.ref('users/' + currentUser.phone + '/balance').on('value', function(snapshot) {
           currentWalletBalance = snapshot.val() || 0;
           document.getElementById('navWalletBalance').innerText = 'Rs. ' + currentWalletBalance;
@@ -942,6 +951,8 @@
         database.ref('users/' + phone).once('value', function(snap) {
           if(!snap.exists()) {
             database.ref('users/' + phone).set({ name: name, phone: phone, balance: 0 });
+          } else {
+            database.ref('users/' + phone).update({ name: name });
           }
           initUserUI();
           closeAuthModal();
@@ -950,7 +961,7 @@
       }
     }
 
-    // WALLET MODAL & REDEEM CODES
+    // WALLET MODAL & REDEEM CODES FIX
     function openWalletModal() {
       if(!currentUser) {
         alert('කරුණාකර පළමුව Sign Up / Login වන්න!');
@@ -970,6 +981,12 @@
     }
 
     function redeemCode() {
+      if(!currentUser || !currentUser.phone) {
+        alert('කරුණාකර පළමුව Sign Up / Login වන්න!');
+        openAuthModal();
+        return;
+      }
+
       var code = document.getElementById('redeemCodeInput').value.trim().toUpperCase();
       if(!code) return alert('කරුණාකර Redeem Code එක ඇතුළත් කරන්න!');
 
@@ -988,7 +1005,6 @@
         var addedAmount = parseFloat(data.amount);
         var newBalance = currentWalletBalance + addedAmount;
 
-        // Update Balance & Mark Code Used
         database.ref('users/' + currentUser.phone).update({ balance: newBalance });
         database.ref('redeemCodes/' + code).update({ used: true, usedBy: currentUser.phone });
 
@@ -999,14 +1015,7 @@
 
     // PURCHASES & WALLET DEDUCTION
     function initiatePurchase(itemName, itemPrice) {
-      if(!currentUser) {
-        alert('කරුණාකර පළමුව Sign Up / Login වන්න!');
-        openAuthModal();
-        return;
-      }
-      selectedPurchase = { name: itemName, price: parseFloat(itemPrice) };
-      document.getElementById('purchaseItemTitle').innerText = itemName + " — Rs. " + itemPrice;
-      document.getElementById('paymentChoiceModal').classList.add('active');
+      alert('⚠️ Website is currently closed for maintenance! Ordering is temporarily disabled.');
     }
 
     function closePaymentModal() {
@@ -1024,10 +1033,8 @@
 
       var newBalance = currentWalletBalance - selectedPurchase.price;
       
-      // Deduct Balance
       database.ref('users/' + currentUser.phone).update({ balance: newBalance });
 
-      // Create Pending Order in Firebase for Admin Approval
       var orderId = 'ORD_' + Date.now();
       database.ref('orders/' + orderId).set({
         user: currentUser.name,
@@ -1050,7 +1057,74 @@
       closePaymentModal();
     }
 
-    // ADMIN FUNCTIONS
+    // ADMIN FUNCTIONS FOR REALTIME USER & ORDERS FETCHING
+    function loadAdminData() {
+      loadAdminUsers();
+      loadAdminOrders();
+    }
+
+    function loadAdminUsers() {
+      database.ref('users').on('value', function(snapshot) {
+        var container = document.getElementById('adminUsersContainer');
+        var badge = document.getElementById('adminTotalUsersBadge');
+        if (!container) return;
+        
+        container.innerHTML = '';
+
+        if (!snapshot.exists()) {
+          container.innerHTML = '<p style="color: var(--zs-text-2);">No registered users found.</p>';
+          if(badge) badge.innerText = 'Total: 0';
+          return;
+        }
+
+        var count = 0;
+        snapshot.forEach(function(child) {
+          count++;
+          var user = child.val();
+          var phoneKey = child.key;
+          var balance = user.balance || 0;
+
+          var div = document.createElement('div');
+          div.className = 'user-item-card';
+          div.innerHTML = `
+            <div>
+              <div style="font-weight: bold; color: var(--zs-cyan); font-size: 15px;">👤 ${user.name || 'Unnamed'}</div>
+              <div style="font-size: 13px; color: var(--zs-text-2);">📱 Phone: ${user.phone || phoneKey}</div>
+              <div style="font-size: 13px; color: #00ff88; font-weight: bold;">💰 Balance: Rs. ${balance}</div>
+            </div>
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <button class="zs-btn zs-btn-primary" style="padding: 6px 12px; font-size: 11px;" onclick="adminAdjustBalance('${phoneKey}', ${balance})">✏️ Edit Balance</button>
+            </div>
+          `;
+          container.appendChild(div);
+        });
+
+        if(badge) badge.innerText = 'Total: ' + count;
+      });
+    }
+
+    function adminAdjustBalance(phoneKey, currentBal) {
+      var amountStr = prompt("Enter NEW Balance or amount to Add/Set for User (" + phoneKey + "):\n[Type '+' to add e.g. +500, or type exact balance e.g. 1000]", currentBal);
+      if (amountStr === null) return;
+
+      var newBalance = currentBal;
+      if (amountStr.startsWith('+')) {
+        var add = parseFloat(amountStr.substring(1));
+        if (!isNaN(add)) newBalance = currentBal + add;
+      } else {
+        var setVal = parseFloat(amountStr);
+        if (!isNaN(setVal)) newBalance = setVal;
+      }
+
+      database.ref('users/' + phoneKey).update({ balance: newBalance }, function(err) {
+        if (!err) {
+          alert('✅ User balance updated successfully to Rs. ' + newBalance);
+        } else {
+          alert('❌ Balance Update Failed!');
+        }
+      });
+    }
+
     function adminCreateCode() {
       var code = document.getElementById('adminCodeInput').value.trim().toUpperCase();
       var amount = parseFloat(document.getElementById('adminAmountInput').value);
@@ -1072,6 +1146,8 @@
     function loadAdminOrders() {
       database.ref('orders').on('value', function(snapshot) {
         var container = document.getElementById('adminOrdersContainer');
+        if (!container) return;
+        
         container.innerHTML = '';
 
         if(!snapshot.exists()) {
@@ -1128,42 +1204,16 @@
 
     function handleTournamentRegistration(e) {
       e.preventDefault();
-      if (currentRegisteredSlots >= maxSlots) {
-        alert('🔒 Registration Closed! 16/16 Slots are full.');
-        return;
-      }
-
-      var playerName = document.getElementById('tourneyPlayerName').value.trim();
-      var ffUID = document.getElementById('tourneyFFUID').value.trim();
-      var whatsApp = document.getElementById('tourneyWhatsApp').value.trim();
-
-      currentRegisteredSlots++;
-      localStorage.setItem('tourneySlots', currentRegisteredSlots);
-      updateSlotUI();
-
-      var formattedSlot = currentRegisteredSlots < 10 ? '0' + currentRegisteredSlots : currentRegisteredSlots;
-      
-      var message = "🏆 *FREE FIRE TOURNAMENT REGISTRATION*\n\n" +
-                    "🎮 Player Name: " + playerName + "\n" +
-                    "🆔 FF UID: " + ffUID + "\n" +
-                    "📱 WhatsApp: " + whatsApp + "\n" +
-                    "💰 Registration Fee: Rs.100\n" +
-                    "🏆 Slot #" + formattedSlot + "\n\n" +
-                    "✅ Payment verify කළාම slot එක confirm කිරීම\n" +
-                    "📲 Waiting for WhatsApp confirmation";
-
-      window.open("https://wa.me/" + storePhone + "?text=" + encodeURIComponent(message), '_blank');
+      alert('⚠️ Tournaments are temporarily closed for maintenance.');
     }
 
-    // CART DRAWER & CART PAYMENT MODAL LOGIC
+    // CART DRAWER LOGIC
     function toggleCart() {
-      document.getElementById('cartDrawer').classList.toggle('active');
+      alert('⚠️ Cart is disabled while website is under maintenance.');
     }
 
     function addToCart(name, price) {
-      cart.push({ name: name, price: price });
-      updateCartUI();
-      toggleCart();
+      alert('⚠️ Store is closed for maintenance! Cannot add items to cart.');
     }
 
     function removeFromCart(index) {
@@ -1193,107 +1243,50 @@
     }
 
     function checkoutCart() {
-      if (cart.length === 0) {
-        alert('Cart එක හිස්ව පවතී.');
-        return;
-      }
-      if(!currentUser) {
-        alert('කරුණාකර පළමුව Sign Up / Login වන්න!');
-        openAuthModal();
-        return;
-      }
-
-      var total = cart.reduce(function(acc, i) { return acc + i.price; }, 0);
-      document.getElementById('cartModalTotalTitle').innerText = "Cart Total: Rs. " + total + " (" + cart.length + " items)";
-      document.getElementById('cartPaymentModal').classList.add('active');
+      alert('⚠️ Store is currently closed for maintenance.');
     }
 
     function closeCartPaymentModal() {
       document.getElementById('cartPaymentModal').classList.remove('active');
     }
 
-    function processCartWalletPay() {
-      var uid = document.getElementById('cartCheckoutUidInput').value.trim();
-      if(!uid) return alert('කරුණාකර FF UID හෝ අවශ්‍ය විස්තර ලබාදෙන්න!');
+    // MAINTENANCE MODE LOCKED NAVIGATION
+    function navigateTo(pageId) {
+      // Allow Admin to freely navigate
+      if (currentUser && currentUser.phone && (currentUser.phone.includes("0742605032") || currentUser.phone.includes("742605032"))) {
+        document.querySelectorAll('.zs-page').forEach(function(p) { p.classList.remove('active-page'); });
+        document.querySelectorAll('.nav-item').forEach(function(n) { n.classList.remove('active'); });
 
-      var total = cart.reduce(function(acc, i) { return acc + i.price; }, 0);
+        var targetPage = document.getElementById('page-' + pageId);
+        if(targetPage) targetPage.classList.add('active-page');
 
-      if(currentWalletBalance < total) {
-        alert('❌ Wallet Balance එක මදියි! සල්ලි එකතු කිරීමට Wallet එකට යන්න.');
+        var targetNav = document.getElementById('nav-' + pageId);
+        if(targetNav) targetNav.classList.add('active');
+
+        document.getElementById('zsNavLinks').classList.remove('open');
+        window.scrollTo(0, 0);
         return;
       }
 
-      var newBalance = currentWalletBalance - total;
-      var itemsList = cart.map(function(i) { return i.name; }).join(", ");
-
-      // Deduct Wallet Balance
-      database.ref('users/' + currentUser.phone).update({ balance: newBalance });
-
-      // Save Order to Firebase
-      var orderId = 'ORD_CART_' + Date.now();
-      database.ref('orders/' + orderId).set({
-        user: currentUser.name,
-        phone: currentUser.phone,
-        uid: uid,
-        item: "CART: " + itemsList,
-        price: total,
-        status: 'Pending',
-        timestamp: Date.now()
-      });
-
-      alert('✅ Cart Order එක සාර්ථකයි! Wallet එකෙන් Rs. ' + total + ' කැපුනා. Admin පරීක්ෂා කර ලබාදෙනු ඇත.');
-      
-      cart = [];
-      updateCartUI();
-      closeCartPaymentModal();
-      toggleCart();
-    }
-
-    function processCartWhatsAppPay() {
-      var uid = document.getElementById('cartCheckoutUidInput').value.trim();
-      var itemsList = cart.map(function(i) { return i.name + " (Rs. " + i.price + ")"; }).join(", ");
-      var total = cart.reduce(function(acc, i) { return acc + i.price; }, 0);
-      
-      var message = "Hi, I want to order the following Cart items:\n" + itemsList + "\n\nTotal: Rs. " + total + "\nFF UID / Details: " + uid;
-      if (currentUser && currentUser.name) {
-        message += "\n\nUser Profile:\nName: " + currentUser.name + "\nPhone: " + currentUser.phone;
+      // Block normal users if they try to navigate away from Home
+      if (pageId !== 'home') {
+        alert("⚠️ Website is currently CLOSED for maintenance! We will be back online soon.");
+        return;
       }
-      
-      window.open("https://wa.me/" + storePhone + "?text=" + encodeURIComponent(message), '_blank');
-      closeCartPaymentModal();
-    }
 
-    // NAVIGATION
-    function navigateTo(pageId) {
       document.querySelectorAll('.zs-page').forEach(function(p) { p.classList.remove('active-page'); });
       document.querySelectorAll('.nav-item').forEach(function(n) { n.classList.remove('active'); });
 
-      var targetPage = document.getElementById('page-' + pageId);
+      var targetPage = document.getElementById('page-home');
       if(targetPage) targetPage.classList.add('active-page');
 
-      var targetNav = document.getElementById('nav-' + pageId);
+      var targetNav = document.getElementById('nav-home');
       if(targetNav) targetNav.classList.add('active');
-
-      document.getElementById('zsNavLinks').classList.remove('open');
-      window.scrollTo(0, 0);
-      resetAutoHomeTimer(pageId);
     }
 
     function resetAutoHomeTimer(currentPage) {
       clearTimeout(autoHomeTimer);
-      if (currentPage !== 'home' && currentPage !== 'admin') {
-        autoHomeTimer = setTimeout(function() { navigateTo('home'); }, 30000);
-      }
     }
-
-    ['mousemove', 'keypress', 'touchstart'].forEach(function(evt) {
-      window.addEventListener(evt, function() {
-        var activePage = document.querySelector('.zs-page.active-page');
-        if (activePage && activePage.id !== 'page-home') {
-          resetAutoHomeTimer(activePage.id.replace('page-', ''));
-        }
-      });
-    });
 
     // PAGE LOAD INITS
     (function() {
